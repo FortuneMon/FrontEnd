@@ -34,7 +34,7 @@ const Nav = () => {
         >
           <img
             src={activeNav === 1 ? "/icon/ChartBlack.png" : "/icon/Chart.png"}
-            alt="Find"
+            alt="Chart"
           />
           <span>통계</span>
         </IconButton>
@@ -48,7 +48,7 @@ const Nav = () => {
                 ? "/icon/FortuneBlack.png"
                 : "/icon/FortuneGray.png"
             }
-            alt="Search"
+            alt="Fortune"
           />
           <span>운세</span>
         </IconButton>
