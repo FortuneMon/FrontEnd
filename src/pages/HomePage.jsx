@@ -4,7 +4,7 @@ import Nav from "../components/Nav";
 import TopNav from "../components/TopNav";
 import { useNavContext } from "../apis/NavContext";
 
-const Home = () => {
+const HomePage = () => {
   const { setActiveNav } = useNavContext();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
 
 const Container = styled.div`
   background-color: white;
