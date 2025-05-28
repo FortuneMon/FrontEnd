@@ -1,28 +1,9 @@
 import styled from "styled-components";
-import MainLayout from "../components/layouts/MainLayout";
-import Title from "../components/layouts/Title";
-
-const ChartPage = () => {
-  return (
-    <MainLayout>
-      <Title>통계</Title>
-    </MainLayout>
-  );
-};
-
-export default ChartPage;
-
-const Container = styled.div`
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  // position: relative;
-`;
 
 const Main = styled.div`
   position: relative;
   top: 50px;
-  background-color: #f5f5f5;
+  background-color: white;
   padding: 0.5rem;
   overflow-y: auto;
   height: 100%;
@@ -42,3 +23,5 @@ const Main = styled.div`
     background: rgba(150, 150, 150, 0.1);
   }
 `;
+
+export default Main;
