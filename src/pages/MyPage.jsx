@@ -2,6 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import TopNav from "../components/layouts/TopNav";
 import Nav from "../components/layouts/Nav";
+import MainLayout from "../components/layouts/MainLayout";
+import Title from "../components/layouts/Title";
 
 const MyPage = () => {
   // ✅ 임시 로그인 상태 (기본값: true → 로그인 상태로 시작)
@@ -16,95 +18,54 @@ const MyPage = () => {
   };
 
   return (
-    <Container>
-      <TopNav />
-      <Main>
-        <Title>내 정보</Title>
-        <FlexBox>
-          {isLoggedIn ? (
-            <UserBoxLogin>
-              <UserBox>
-                <img src="img/UserImg.png" alt="user" />
-                <NameBox>
-                  <UserName>홍길동</UserName>
-                  <PokeName>
-                    <img src="img/Partner.png" alt="partner" />
-                    &nbsp;파트너 포켓몬
-                  </PokeName>
-                </NameBox>
-                <img src="img/Logo.png" alt="logo" />
-              </UserBox>
-              <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
-            </UserBoxLogin>
-          ) : (
-            <UserBoxLogout>
-              <ButtonLogout onClick={handleLogin}>로그인</ButtonLogout>
-            </UserBoxLogout>
-          )}
+    <MainLayout>
+      <Title>내 정보</Title>
+      <FlexBox>
+        {isLoggedIn ? (
+          <UserBoxLogin>
+            <UserBox>
+              <img src="img/UserImg.png" alt="user" />
+              <NameBox>
+                <UserName>홍길동</UserName>
+                <PokeName>
+                  <img src="img/Partner.png" alt="partner" />
+                  &nbsp;파트너 포켓몬
+                </PokeName>
+              </NameBox>
+              <img src="img/Logo.png" alt="logo" />
+            </UserBox>
+            <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
+          </UserBoxLogin>
+        ) : (
+          <UserBoxLogout>
+            <ButtonLogout onClick={handleLogin}>로그인</ButtonLogout>
+          </UserBoxLogout>
+        )}
 
-          <ContentBox>
-            <Content>
-              <div className="corner top-left" />
-              <div className="corner top-right" />
-              <div className="corner bottom-left" />
-              <div className="corner bottom-right" />
-              <img src="img/MonsterBall.png" alt="ball" />
-              <SubTitle>포켓몬 뽑기</SubTitle>
-            </Content>
-            <Content>
-              <div className="corner top-left" />
-              <div className="corner top-right" />
-              <div className="corner bottom-left" />
-              <div className="corner bottom-right" />
-              <img src="img/PokeDex.png" alt="dex" />
-              <SubTitle>포켓몬 도감</SubTitle>
-            </Content>
-          </ContentBox>
-        </FlexBox>
-      </Main>
-      <Nav />
-    </Container>
+        <ContentBox>
+          <Content>
+            <div className="corner top-left" />
+            <div className="corner top-right" />
+            <div className="corner bottom-left" />
+            <div className="corner bottom-right" />
+            <img src="img/MonsterBall.png" alt="ball" />
+            <SubTitle>포켓몬 뽑기</SubTitle>
+          </Content>
+          <Content>
+            <div className="corner top-left" />
+            <div className="corner top-right" />
+            <div className="corner bottom-left" />
+            <div className="corner bottom-right" />
+            <img src="img/PokeDex.png" alt="dex" />
+            <SubTitle>포켓몬 도감</SubTitle>
+          </Content>
+        </ContentBox>
+      </FlexBox>
+    </MainLayout>
   );
 };
 
 export default MyPage;
-
-const Container = styled.div`
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  // position: relative;
-`;
-
-const Main = styled.div`
-  position: relative;
-  top: 50px;
-  background-color: white;
-  padding: 0.5rem;
-  overflow-y: auto;
-  height: 100%;
-  max-height: calc(100% - 100px);
-  box-sizing: border-box;
-
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(150, 150, 150);
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(150, 150, 150, 0.1);
-  }
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  margin-left: 10px;
-  margin-top: 10px;
-`;
 
 const FlexBox = styled.div`
   display: flex;

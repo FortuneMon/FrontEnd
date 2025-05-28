@@ -3,6 +3,9 @@ import styled from "styled-components";
 import TopNav from "../components/layouts/TopNav";
 import Nav from "../components/layouts/Nav";
 import axios from "axios";
+import MainLayout from "../components/layouts/MainLayout";
+import Title from "../components/layouts/Title";
+import Main from "../components/layouts/Main";
 
 const dummyFortune = {
   재물운:
@@ -49,71 +52,34 @@ const FortunePage = () => {
   };
 
   return (
-    <Container>
-      <TopNav />
-      <Main>
-        <Title>오늘의 운세 뽑기</Title>
-        <FlexBox>
-          <ContentBox>
-            {!fortune ? (
-              <ImgBox>
-                <img src="img/Fortune.png" alt="" />
-              </ImgBox>
+    <MainLayout>
+      <Title>오늘의 운세 뽑기</Title>
+      <FlexBox>
+        <ContentBox>
+          {!fortune ? (
+            <ImgBox>
+              <img src="img/Fortune.png" alt="" />
+            </ImgBox>
+          ) : (
+            <></>
+          )}
+          {!loading &&
+            (fortune ? (
+              <FortuneText>{fortune}</FortuneText>
             ) : (
-              <></>
-            )}
-            {!loading &&
-              (fortune ? (
-                <FortuneText>{fortune}</FortuneText>
-              ) : (
-                <FortuneBtn onClick={handleDrawFortune}>오늘의 운세를 뽑아주세요</FortuneBtn>
-              ))}
-          </ContentBox>
-        </FlexBox>
-      </Main>
+              <FortuneBtn onClick={handleDrawFortune}>
+                오늘의 운세를 뽑아주세요
+              </FortuneBtn>
+            ))}
+        </ContentBox>
+      </FlexBox>
+
       <Nav />
-    </Container>
+    </MainLayout>
   );
 };
 
 export default FortunePage;
-
-const Container = styled.div`
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  // position: relative;
-`;
-
-const Main = styled.div`
-  position: relative;
-  top: 50px;
-  background-color: white;
-  padding: 0.5rem;
-  overflow-y: auto;
-  height: 100%;
-  max-height: calc(100% - 100px);
-  box-sizing: border-box;
-
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(150, 150, 150);
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(150, 150, 150, 0.1);
-  }
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  margin-left: 10px;
-  margin-top: 10px;
-`;
 
 const FlexBox = styled.div`
   display: flex;
