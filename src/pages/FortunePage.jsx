@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import TopNav from "../components/TopNav";
-import Nav from "../components/Nav";
+import TopNav from "../components/layouts/TopNav";
+import Nav from "../components/layouts/Nav";
 import axios from "axios";
 
 const dummyFortune = {
@@ -66,9 +66,7 @@ const FortunePage = () => {
               (fortune ? (
                 <FortuneText>{fortune}</FortuneText>
               ) : (
-                <FortuneBtn onClick={handleDrawFortune}>
-                  오늘의 운세를 뽑아주세요
-                </FortuneBtn>
+                <FortuneBtn onClick={handleDrawFortune}>오늘의 운세를 뽑아주세요</FortuneBtn>
               ))}
           </ContentBox>
         </FlexBox>

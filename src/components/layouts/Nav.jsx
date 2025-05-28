@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavContext } from "../apis/NavContext";
+import { useNavContext } from "../../apis/NavContext";
 
 const Nav = () => {
   // 사실상 setActiveNav 호출이 불필요 NavContext에서 url이 이동하면 자동으로 실행되기에
@@ -18,48 +18,20 @@ const Nav = () => {
   return (
     <Container>
       <IconList>
-        <IconButton
-          onClick={() => handleNavClick(0, "/")}
-          isActive={activeNav === 0}
-        >
-          <img
-            src={activeNav === 0 ? "/icon/HomeBlack.png" : "/icon/HomeGray.png"}
-            alt="Home"
-          />
+        <IconButton onClick={() => handleNavClick(0, "/")} isActive={activeNav === 0}>
+          <img src={activeNav === 0 ? "/icon/HomeBlack.png" : "/icon/HomeGray.png"} alt="Home" />
           <span>홈</span>
         </IconButton>
-        <IconButton
-          onClick={() => handleNavClick(1, "/chart")}
-          isActive={activeNav === 1}
-        >
-          <img
-            src={activeNav === 1 ? "/icon/ChartBlack.png" : "/icon/Chart.png"}
-            alt="Chart"
-          />
+        <IconButton onClick={() => handleNavClick(1, "/chart")} isActive={activeNav === 1}>
+          <img src={activeNav === 1 ? "/icon/ChartBlack.png" : "/icon/Chart.png"} alt="Chart" />
           <span>통계</span>
         </IconButton>
-        <IconButton
-          onClick={() => handleNavClick(2, "/fortune")}
-          isActive={activeNav === 2}
-        >
-          <img
-            src={
-              activeNav === 2
-                ? "/icon/FortuneBlack.png"
-                : "/icon/FortuneGray.png"
-            }
-            alt="Fortune"
-          />
+        <IconButton onClick={() => handleNavClick(2, "/fortune")} isActive={activeNav === 2}>
+          <img src={activeNav === 2 ? "/icon/FortuneBlack.png" : "/icon/FortuneGray.png"} alt="Fortune" />
           <span>운세</span>
         </IconButton>
-        <IconButton
-          onClick={() => handleNavClick(3, "/mypage")}
-          isActive={activeNav === 3}
-        >
-          <img
-            src={activeNav === 3 ? "/icon/UserBlack.png" : "/icon/UserGray.png"}
-            alt="User"
-          />
+        <IconButton onClick={() => handleNavClick(3, "/mypage")} isActive={activeNav === 3}>
+          <img src={activeNav === 3 ? "/icon/UserBlack.png" : "/icon/UserGray.png"} alt="User" />
           <span>마이</span>
         </IconButton>
       </IconList>
@@ -83,9 +55,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   @media (max-width: 600px) {
-    height: calc(
-      var(--vh, 1vh) * 8
-    ); // 작은 화면에서는 화면 비율에 맞게 높이 설정 전체 높이의 8%
+    height: calc(var(--vh, 1vh) * 8); // 작은 화면에서는 화면 비율에 맞게 높이 설정 전체 높이의 8%
   }
 
   z-index: 10000;

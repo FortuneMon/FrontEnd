@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import TopNav from "../components/TopNav";
-import Nav from "../components/Nav";
+import TopNav from "../components/layouts/TopNav";
+import Nav from "../components/layouts/Nav";
 
 const MyPage = () => {
   // ✅ 임시 로그인 상태 (기본값: true → 로그인 상태로 시작)
