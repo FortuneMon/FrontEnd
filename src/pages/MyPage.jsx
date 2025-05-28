@@ -218,7 +218,7 @@ const ButtonLogout = styled.div`
 
 const ContentBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: #f4f4f4;
   display: flex;
   justify-content: space-around;
@@ -238,6 +238,7 @@ const Content = styled.div`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  cursor: pointer;
 
   img {
     width: 100px;
@@ -267,53 +268,53 @@ const Content = styled.div`
 
   /* 각 corner 위치별 스타일 */
   .top-left::before {
-    width: 10px;
-    height: 2px;
+    width: 15px;
+    height: 4px;
     top: 0;
     left: 0;
   }
   .top-left::after {
-    width: 2px;
-    height: 10px;
+    width: 4px;
+    height: 15px;
     top: 0;
     left: 0;
   }
 
   .top-right::before {
-    width: 10px;
-    height: 2px;
+    width: 15px;
+    height: 4px;
     top: 0;
     right: 0;
   }
   .top-right::after {
-    width: 2px;
-    height: 10px;
+    width: 4px;
+    height: 15px;
     top: 0;
     right: 0;
   }
 
   .bottom-left::before {
-    width: 10px;
-    height: 2px;
+    width: 15px;
+    height: 4px;
     bottom: 0;
     left: 0;
   }
   .bottom-left::after {
-    width: 2px;
-    height: 10px;
+    width: 4px;
+    height: 15px;
     bottom: 0;
     left: 0;
   }
 
   .bottom-right::before {
-    width: 10px;
-    height: 2px;
+    width: 15px;
+    height: 4px;
     bottom: 0;
     right: 0;
   }
   .bottom-right::after {
-    width: 2px;
-    height: 10px;
+    width: 4px;
+    height: 15px;
     bottom: 0;
     right: 0;
   }
