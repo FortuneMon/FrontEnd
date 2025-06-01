@@ -22,6 +22,7 @@ export const NavProvider = ({ children }) => {
       "/fortune": 2,
       "/mypage": 3,
       "/pokedev": 3,
+      "/pokeball": 3,
     };
 
     setActiveNav(pathMap[location.pathname] ?? 0);

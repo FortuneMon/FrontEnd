@@ -25,3 +25,27 @@ export const setPartnerPokemon = async (pokemonId) => {
     throw error;
   }
 };
+
+// 유저가 소지한 몬스터볼 목록 불러오기
+export const fetchMyPokeBalls = async () => {
+  try {
+    const response = await axios.get("http://43.201.162.24:8080//users/balls");
+    return response.data;
+  } catch (error) {
+    console.error("몬스터볼 불러오기 실패:", error);
+    throw error;
+  }
+};
+
+// 몬스터볼을 사용하여 뽑기
+export const openPokemonByBall = async (ballId) => {
+  try {
+    const response = await axios.post(
+      `http://43.201.162.24:8080/users/balls/{id}/open${ballId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("포켓몬 뽑기 실패:", error);
+    throw error;
+  }
+};

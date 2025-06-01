@@ -46,7 +46,7 @@ const MyPage = () => {
         )}
 
         <ContentBox>
-          <Content>
+          <Content onClick={() => navigate("/pokeball")}>
             <div className="corner top-left" />
             <div className="corner top-right" />
             <div className="corner bottom-left" />
@@ -89,8 +89,10 @@ const UserBoxLogin = styled.div`
   padding: 1rem;
   box-sizing: border-box;
   background-color: #f4f4f4;
-
   border-radius: 1rem;
+
+  box-shadow: rgb(0, 0, 0, 0.1) 3px 3px 6px 1px;
+
   img {
     width: 100px;
   }
@@ -106,8 +108,9 @@ const UserBoxLogout = styled.div`
   padding: 1rem;
   box-sizing: border-box;
   background-color: #f4f4f4;
-
   border-radius: 1rem;
+
+  box-shadow: rgb(0, 0, 0, 0.1) 3px 3px 6px 1px;
 
   img {
     width: 100px;
@@ -189,6 +192,8 @@ const ContentBox = styled.div`
   align-items: center;
   margin-top: 2rem;
   border-radius: 1rem;
+
+  box-shadow: rgb(0, 0, 0, 0.1) 3px 3px 6px 1px;
 `;
 
 const Content = styled.div`
