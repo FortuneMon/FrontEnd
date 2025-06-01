@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import ChartPage from "./pages/ChartPage";
 import FortunePage from "./pages/FortunePage";
 import MyPage from "./pages/MyPage";
+import PokeDevPage from "./pages/PokeDevPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/chart" element={<ChartPage></ChartPage>}></Route>
           <Route path="/fortune" element={<FortunePage></FortunePage>}></Route>
           <Route path="/mypage" element={<MyPage></MyPage>}></Route>
+          <Route path="/pokedev" element={<PokeDevPage></PokeDevPage>}></Route>
         </Routes>
       </AppDom>
     </NavProvider>

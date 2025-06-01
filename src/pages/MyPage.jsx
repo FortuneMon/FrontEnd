@@ -4,10 +4,13 @@ import TopNav from "../components/layouts/TopNav";
 import Nav from "../components/layouts/Nav";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   // ✅ 임시 로그인 상태 (기본값: true → 로그인 상태로 시작)
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -51,7 +54,7 @@ const MyPage = () => {
             <img src="img/MonsterBall.png" alt="ball" />
             <SubTitle>포켓몬 뽑기</SubTitle>
           </Content>
-          <Content>
+          <Content onClick={() => navigate("/pokedev")}>
             <div className="corner top-left" />
             <div className="corner top-right" />
             <div className="corner bottom-left" />
@@ -216,7 +219,6 @@ const Content = styled.div`
     width: 150px;
     height: 150px;
     opacity: 0;
-    transition: opacity 0.2s ease;
   }
 
   /* 각 모서리의 선 두 개: 가로 + 세로 */
