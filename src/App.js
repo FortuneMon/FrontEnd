@@ -10,25 +10,33 @@ import PokeDevPage from "./pages/PokeDevPage";
 import PokeBallPage from "./pages/PokeBallPage";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
-
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <NavProvider>
       <AppDom>
         <Routes>
-          <Route path="/" element={<HomePage></HomePage>}></Route>
-          <Route path="/chart" element={<ChartPage></ChartPage>}></Route>
-          <Route path="/fortune" element={<FortunePage></FortunePage>}></Route>
-          <Route path="/mypage" element={<MyPage></MyPage>}></Route>
-          <Route path="/pokedev" element={<PokeDevPage></PokeDevPage>}></Route>
-          <Route
-            path="/pokeball"
-            element={<PokeBallPage></PokeBallPage>}
-          ></Route>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/chart" element={<ChartPage />}></Route>
+          <Route path="/fortune" element={<FortunePage />}></Route>
+          <Route path="/mypage" element={<MyPage />}></Route>
+          <Route path="/pokedev" element={<PokeDevPage />}></Route>
+          <Route path="/pokeball" element={<PokeBallPage />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
         </Routes>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </AppDom>
     </NavProvider>
   );
