@@ -8,6 +8,9 @@ import FortunePage from "./pages/FortunePage";
 import MyPage from "./pages/MyPage";
 import PokeDevPage from "./pages/PokeDevPage";
 import PokeBallPage from "./pages/PokeBallPage";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
+
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
             path="/pokeball"
             element={<PokeBallPage></PokeBallPage>}
           ></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
         </Routes>
       </AppDom>
     </NavProvider>
