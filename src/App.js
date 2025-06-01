@@ -7,6 +7,8 @@ import ChartPage from "./pages/ChartPage";
 import FortunePage from "./pages/FortunePage";
 import MyPage from "./pages/MyPage";
 import PokeDevPage from "./pages/PokeDevPage";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/fortune" element={<FortunePage></FortunePage>}></Route>
           <Route path="/mypage" element={<MyPage></MyPage>}></Route>
           <Route path="/pokedev" element={<PokeDevPage></PokeDevPage>}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
         </Routes>
       </AppDom>
     </NavProvider>
