@@ -16,7 +16,7 @@ const myPokemonListDemo = [
   {
     id: 2,
     name: "파이리",
-    image: "/img/UserImg.png",
+    image: "/img/파이리.png",
     type: ["불꽃", "비행"],
     group: "도마뱀포켓몬",
     owned: true,
@@ -24,7 +24,7 @@ const myPokemonListDemo = [
   {
     id: 3,
     name: "꼬부기",
-    image: "/img/Partner.png",
+    image: "/img/꼬부기.png",
     type: ["물", "얼음"],
     group: "거북포켓몬",
     owned: false,
@@ -32,7 +32,7 @@ const myPokemonListDemo = [
   {
     id: 4,
     name: "이상해씨",
-    image: "/img/Logo.png",
+    image: "/img/이상해씨.png",
     type: ["풀", "독"],
     group: "풀포켓몬",
     owned: false,
@@ -40,7 +40,7 @@ const myPokemonListDemo = [
   {
     id: 5,
     name: "버터플",
-    image: "/img/UserImg.png",
+    image: "/img/버터플.png",
     type: ["벌레", "비행"],
     group: "나비포켓몬",
     owned: false,
@@ -340,7 +340,6 @@ const PokemonCard = styled.div`
     width: 70px;
     height: 70px;
     opacity: 0;
-\
   }
 
   .corner.selected {

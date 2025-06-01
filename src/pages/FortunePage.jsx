@@ -14,6 +14,8 @@ const dummyFortune = {
     "오해가 발생하거나 서로에게 불만이 생기는 날입니다. 사소한 일도 큰 다툼으로 이어지거나 약속이 어긋나는 일들이 발생합니다. 새롭게 인연을 만나도 끝이 좋지 않으니 새로운 만남도 자제해야 하며 판단력이 흐려져서 이성에게 실수를 할 수도 있습니다. 특히 본인이나 상대에게 서로 알아서는 안 될 일이 있다면 오늘은 주변의 실수로 들통이 나는 경우도 있습니다. 가급적 다툼을 피하시고 조금이라도 오해를 살 만한 일이나 행동을 하지 않도록 하시기 바랍니다.",
   로또운:
     "전체적인 운의 흐름이 어려운 날입니다. 공연히 짜증이 나거나 뜻대로 일이 풀리지 않으니 다 잡은 행운도 오히려 나의 몫이 안 될 가능성이 있는 날입니다. 당첨 기운이 크게 부족한 날이니 구입을 절대로 삼가셔야 하는 날입니다. 오늘 좋은 기운을 보충하고 액운을 멀리하는 색상은 파란색, 초록색입니다. 의상이나 소품에 참고하여 지니시면 도움이 될 것이며 구입 지역이나 장소 혹은 연관되는 이름에 ㅂ, ㅍ, ㅎ 자음의 성씨 자음이 들어가면 행운과 더 가까워질 것입니다.",
+  건강운:
+    "건강에 대한 걱정이 생기는 날입니다. 몸이 아프거나 병원에 가게 되는 일이 생길 수 있습니다. 특히 평소에 건강에 문제가 있었던 분들은 오늘은 병원에 가서 검사를 받는 것이 좋습니다. 오늘은 몸의 이상을 발견하고 치료를 받는 것이 좋습니다. 또한, 오늘은 스트레스가 쌓이기 쉬운 날이니 스트레스를 해소할 수 있는 방법을 찾아보는 것이 좋습니다.",
 };
 
 const FortunePage = () => {
@@ -41,7 +43,9 @@ const FortunePage = () => {
 
   const handleDrawFortune = async () => {
     try {
-      const response = await axios.post("/api/fortune/draw"); // 운세 뽑기 API
+      const response = await axios.post(
+        "http://43.201.162.24:8080/users/fortune"
+      );
       if (response.data?.fortune) {
         setFortune(response.data.fortune);
       }
@@ -132,7 +136,21 @@ const FortuneText = styled.div`
   background-color: #f7f7f7;
   padding: 1rem;
   border-radius: 10px;
-  width: 80%;
-
+  width: 90%;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(150, 150, 150, 0.1);
+  }
 `;
