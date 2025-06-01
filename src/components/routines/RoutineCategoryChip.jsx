@@ -23,6 +23,7 @@ const Container = styled.div`
   display: flex;
   column-gap: 10px;
   cursor: pointer;
+  align-items: center;
 `;
 
 const Text = styled.p`
