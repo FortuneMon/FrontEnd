@@ -8,6 +8,8 @@ import CommonButton from "../../components/common/CommonButton";
 import { useNavigate } from "react-router-dom";
 import AppColor from "../../utils/AppColor";
 import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
+import { checkId, checkNickname, signup } from "../../apis/UserApi";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -41,19 +43,45 @@ const SignUp = () => {
       return error;
     },
     onSubmit: (values) => {
-      //TODO API 연동
-      console.log("click test!!!!!!");
+      if (!checked.id) {
+        toast.error("아이디 중복 체크를 진행해 주세요");
+        return;
+      }
+      if (!checked.nickname) {
+        toast.error("닉네임 중복 체크를 진행해 주세요");
+        return;
+      }
+      signup({ loginId: values.id, password: values.password, nickname: values.nickname })
+        .then(() => {
+          toast.success("회원가입이 완료되었습니다!");
+          navigate("/login");
+        })
+        .catch((error) => {
+          toast.error("일시적 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        });
     },
   });
 
-  const checkId = useCallback(() => {
-    //TODO API 연동 후 구현
-    setChecked((prev) => ({ ...prev, id: !prev.id }));
-  }, []);
-  const checkNickname = useCallback(() => {
-    //TODO API 연동 후 구현
-    setChecked((prev) => ({ ...prev, nickname: !prev.nickname }));
-  }, []);
+  // TODO 중복 체크 API 추가 되면 수정
+  const onCheckId = useCallback(async () => {
+    if (!values.id) return;
+    const result = await checkId({ id: values.id });
+    if (result) {
+      setChecked((prev) => ({ ...prev, id: true }));
+    } else {
+      setChecked((prev) => ({ ...prev, id: false }));
+    }
+  }, [values]);
+
+  const onCheckNickname = useCallback(async () => {
+    if (!values.nickname) return;
+    const result = await checkNickname({ nickname: values.nickname });
+    if (result) {
+      setChecked((prev) => ({ ...prev, nickname: true }));
+    } else {
+      setChecked((prev) => ({ ...prev, nickname: false }));
+    }
+  }, [values]);
 
   return (
     <AuthLayout>
@@ -70,7 +98,10 @@ const SignUp = () => {
                 helperText={errors.id}
                 value={values.id}
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setChecked((prev) => ({ ...prev, id: false }));
+                }}
               />
               <CommonButton
                 buttonStyle={{
@@ -84,7 +115,7 @@ const SignUp = () => {
                 }}
                 type="button"
                 label="중복 확인"
-                onClick={() => {}}
+                onClick={onCheckId}
                 disabled={checked.id}
               />
             </div>
@@ -117,7 +148,10 @@ const SignUp = () => {
                 helperText={errors.nickname}
                 value={values.nickname}
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setChecked((prev) => ({ ...prev, nickname: false }));
+                }}
               />
               <CommonButton
                 buttonStyle={{
@@ -131,7 +165,7 @@ const SignUp = () => {
                 }}
                 type="button"
                 label="중복 확인"
-                onClick={() => {}}
+                onClick={onCheckNickname}
                 disabled={checked.nickname}
               />
             </div>
