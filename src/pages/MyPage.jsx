@@ -5,8 +5,7 @@ import Nav from "../components/layouts/Nav";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import { useNavigate } from "react-router-dom";
-import { getMyInfo } from "../apis/UserApi";
-import { getMyData } from "../apis/PokeApi";
+import { fetchMyInfo } from "../apis/UserApi";
 import useLoginLoading from "../hooks/useLoginLoading";
 
 const MyPage = () => {
@@ -20,7 +19,7 @@ const MyPage = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const result = await getMyData();
+        const result = await fetchMyInfo();
         setUser(result);
       } catch (error) {
         console.error("내 정보 불러오기 실패", error);
