@@ -5,10 +5,12 @@ import Nav from "../components/layouts/Nav";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import { useNavigate } from "react-router-dom";
-import { getMyInfo } from "../apis/UserApi";
-import { getMyData } from "../apis/PokeApi";
+import { fetchMyInfo } from "../apis/UserApi";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const MyPage = () => {
+  const { isLoading } = useLoginLoading();
+
   const [user, setUser] = useState(null); // 사용자 정보 저장
   const [loading, setLoading] = useState(true); // 로딩 상태
 
@@ -17,7 +19,7 @@ const MyPage = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const result = await getMyData();
+        const result = await fetchMyInfo();
         setUser(result);
       } catch (error) {
         console.error("내 정보 불러오기 실패", error);
@@ -27,7 +29,7 @@ const MyPage = () => {
       }
     }
     fetchUser();
-  }, []);
+  }, [isLoading]);
 
   const handleLogout = () => {
     // 로그아웃 API 호출 + 상태 초기화
@@ -38,55 +40,8 @@ const MyPage = () => {
 
   if (loading) return <div>로딩 중...</div>;
 
-  // return (
-  //   <MainLayout>
-  //     <Title>내 정보</Title>
-  //     <FlexBox>
-  //       {isLoggedIn ? (
-  //         <UserBoxLogin>
-  //           <UserBox>
-  //             <img src="img/UserImg.png" alt="user" />
-  //             <NameBox>
-  //               <UserName>홍길동</UserName>
-  //               <PokeName>
-  //                 <img src="img/Partner.png" alt="partner" />
-  //                 &nbsp;파트너 포켓몬
-  //               </PokeName>
-  //             </NameBox>
-  //             <img src="img/Logo.png" alt="logo" />
-  //           </UserBox>
-  //           <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
-  //         </UserBoxLogin>
-  //       ) : (
-  //         <UserBoxLogout>
-  //           <ButtonLogout onClick={handleLogin}>로그인</ButtonLogout>
-  //         </UserBoxLogout>
-  //       )}
-
-  //       <ContentBox>
-  //         <Content onClick={() => navigate("/pokeball")}>
-  //           <div className="corner top-left" />
-  //           <div className="corner top-right" />
-  //           <div className="corner bottom-left" />
-  //           <div className="corner bottom-right" />
-  //           <img src="img/MonsterBall.png" alt="ball" />
-  //           <SubTitle>포켓몬 뽑기</SubTitle>
-  //         </Content>
-  //         <Content onClick={() => navigate("/pokedev")}>
-  //           <div className="corner top-left" />
-  //           <div className="corner top-right" />
-  //           <div className="corner bottom-left" />
-  //           <div className="corner bottom-right" />
-  //           <img src="img/PokeDex.png" alt="dex" />
-  //           <SubTitle>포켓몬 도감</SubTitle>
-  //         </Content>
-  //       </ContentBox>
-  //     </FlexBox>
-  //   </MainLayout>
-  // );
-
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <Title>내 정보</Title>
       <FlexBox>
         {user ? (
