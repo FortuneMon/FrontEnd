@@ -7,6 +7,7 @@ import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import Main from "../components/layouts/Main";
 import { drawTodayFortune, getTodayFortune } from "../apis/Fortune";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const dummyFortune = {
   재물운:
@@ -20,6 +21,8 @@ const dummyFortune = {
 };
 
 const FortunePage = () => {
+  const { isLoading } = useLoginLoading();
+
   const [fortune, setFortune] = useState([]);
   const [loading, setLoading] = useState(true);
   const [love, setLove] = useState("");
@@ -62,7 +65,7 @@ const FortunePage = () => {
     };
 
     fetchFortune();
-  }, []);
+  }, [isLoading]);
 
   const handleDrawFortune = async () => {
     try {
@@ -92,7 +95,7 @@ const FortunePage = () => {
   };
 
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <Title>오늘의 운세 뽑기</Title>
       <FlexBox>
         <ContentBox>
