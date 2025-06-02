@@ -22,3 +22,15 @@ export function getTotalDays(year, month) {
   const lastDate = dayjs(new Date(year, month, 0));
   return lastDate.get("date");
 }
+
+export function getRandomItems(array, count) {
+  const copy = [...array];
+  if (count > array.length) {
+    return copy;
+  }
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, count);
+}

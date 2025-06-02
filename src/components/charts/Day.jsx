@@ -4,9 +4,17 @@ import dayjs from "dayjs";
 import AppColor from "../../utils/AppColor";
 
 export default function Day(props) {
-  const { date, color, isDone } = props;
+  const { date, color } = props;
 
-  const extractedDate = useMemo(() => dayjs(date).get("date"), [date]);
+  const extractedDate = useMemo(() => {
+    if (date === null) return "";
+    return dayjs(Object.keys(date)[0]).get("date");
+  }, [date]);
+
+  const isDone = useMemo(() => {
+    if (date === null) return false;
+    return Object.values(date)[0];
+  }, [date]);
 
   return (
     <Container
@@ -14,7 +22,7 @@ export default function Day(props) {
         backgroundColor: date === null ? AppColor.white : isDone ? color : AppColor.background.lightgray,
       }}
     >
-      {date === null ? "" : extractedDate}
+      {extractedDate}
     </Container>
   );
 }
