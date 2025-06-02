@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "",
+  baseURL: "http://43.201.162.24:8080", //TODO 추후 .env 파일로 베이스 URL 받아오고 ""로 수정
   withCredentials: true,
   headers: {
     "Access-Control-Allow-Origin": "*",

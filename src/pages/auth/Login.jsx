@@ -7,9 +7,15 @@ import * as Yup from "yup";
 import CommonButton from "../../components/common/CommonButton";
 import AppColor from "../../utils/AppColor";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { login } from "../../apis/UserApi";
+import { useDispatch } from "react-redux";
+import { setMyInfo } from "../../store/slices/user";
+import { getMyInfo } from "../../store/thunks/user";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { values, errors, touched, isValid, handleSubmit, handleChange, handleBlur } = useFormik({
     initialValues: {
@@ -23,8 +29,17 @@ const Login = () => {
         .required("비밀번호를 입력해 주세요."),
     }),
     onSubmit: (values) => {
-      //TODO API 연동
-      console.log("click test!!!!!!");
+      login({ loginId: values.id, password: values.password })
+        .then(() => {
+          // TODO 내 정보 조회 API 추가 되면 수정
+          // dispatch(getMyInfo());
+          dispatch(setMyInfo({ nickname: "테스트1", partner: { name: "이상해씨" } }));
+          toast.success("로그인 성공");
+          navigate("/");
+        })
+        .catch((error) => {
+          toast.error("로그인 실패");
+        });
     },
   });
 
