@@ -48,15 +48,22 @@ const HomePage = () => {
       <div>
         <Title>오늘의 루틴</Title>
         <RoutineBox>
-          {myRoutine.map((data, i) => (
-            <MyRoutineCard
-              key={data.routineId}
-              routineId={data.routineId}
-              title={data.name}
-              isCompleted={data.isCompleted}
-              isLast={data.length === i + 1}
-            />
-          ))}
+          {myRoutine.length > 0 ? (
+            myRoutine.map((data, i) => (
+              <MyRoutineCard
+                key={data.routineId}
+                routineId={data.routineId}
+                title={data.name}
+                isCompleted={data.isCompleted}
+                isLast={data.length === i + 1}
+              />
+            ))
+          ) : (
+            <NoRoutineWrapper>
+              <NoRoutineText>현재 진행 중인 루틴이 없습니다.</NoRoutineText>
+              <NoRoutineText>내 일상에 만들고 싶은 루틴을 추가해보세요!</NoRoutineText>
+            </NoRoutineWrapper>
+          )}
         </RoutineBox>
       </div>
       <Line />
@@ -113,4 +120,16 @@ const CategoryBox = styled.div`
   display: flex;
   column-gap: 14px;
   margin-top: 20px;
+`;
+
+const NoRoutineWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+`;
+
+const NoRoutineText = styled.p`
+  margin: 8px 0;
 `;
