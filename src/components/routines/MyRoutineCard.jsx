@@ -2,14 +2,17 @@ import { useCallback } from "react";
 import styled from "styled-components";
 import CheckBox from "./CheckBox";
 import AppColor from "../../utils/AppColor";
+import { useDispatch } from "react-redux";
+import { patchMyRoutineStatus } from "../../store/thunks/user";
 
 const MyRoutineCard = (props) => {
+  const dispatch = useDispatch();
   const { routineId, title, isCompleted, isLast } = props;
 
   const onClick = useCallback(() => {
-    //TODO API 연동 후 수행 여부 체크
-    console.log(routineId, isCompleted, "clicked");
-  }, [routineId, isCompleted]);
+    dispatch(patchMyRoutineStatus(routineId));
+    console.log("RoutineMyCard clicked | patch");
+  }, [dispatch, routineId]);
 
   return (
     <Container style={isLast ? { borderBottom: "0px" } : null}>

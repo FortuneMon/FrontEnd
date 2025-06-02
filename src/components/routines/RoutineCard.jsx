@@ -2,14 +2,21 @@ import { useCallback } from "react";
 import styled from "styled-components";
 import AppColor from "../../utils/AppColor";
 import SelectRoutineButton from "../routines/SelectRoutineButton";
+import { useDispatch } from "react-redux";
+import { addMyRoutine, deleteMyRoutine } from "../../store/thunks/user";
 
 const RoutineCard = (props) => {
   const { routineId, title, isRegistered, isLast } = props;
 
+  const dispatch = useDispatch();
+
   const onClick = useCallback(() => {
-    //TODO API 연동 후 루틴 추가 또는 제거
-    console.log(routineId, isRegistered, "clicked");
-  }, [routineId, isRegistered]);
+    if (isRegistered) {
+      dispatch(deleteMyRoutine(routineId));
+    } else {
+      dispatch(addMyRoutine(routineId));
+    }
+  }, [dispatch, routineId, isRegistered]);
 
   return (
     <Container style={isLast ? { borderBottom: "0px" } : null}>
