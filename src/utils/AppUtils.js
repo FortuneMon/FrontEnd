@@ -24,10 +24,10 @@ export function getTotalDays(year, month) {
 }
 
 export function getRandomItems(array, count) {
-  const copy = [...array];
-  if (count > array.length) {
-    return copy;
+  if (count === 0 || count > array.length) {
+    return [];
   }
+  const copy = [...array];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [copy[i], copy[j]] = [copy[j], copy[i]];

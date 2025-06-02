@@ -107,7 +107,6 @@ const RoutineBox = styled.div`
   border-radius: 12px;
   overflow: hidden;
   margin-top: 20px;
-
   box-shadow: rgb(0, 0, 0, 0.1) 3px 4px 18px 1px;
 `;
 
