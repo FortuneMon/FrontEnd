@@ -11,9 +11,12 @@ import { fetchAllRoutinesByCategory } from "../apis/RoutineApi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyRoutines } from "../store/thunks/user";
 import { selectMyRoutines } from "../store/slices/user";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const HomePage = () => {
   const dispatch = useDispatch();
+
+  const { isLoading } = useLoginLoading();
 
   const [category, setCategory] = useState(Constants.routineCategory[0].title);
   const onClickCategory = useCallback(
@@ -27,29 +30,40 @@ const HomePage = () => {
   const [allRoutinesByCategory, setAllRoutinesByCategory] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchMyRoutines());
-  }, [dispatch]);
+    if (!isLoading) {
+      dispatch(fetchMyRoutines());
+    }
+  }, [isLoading, dispatch]);
 
   useEffect(() => {
-    fetchAllRoutinesByCategory(category).then((data) => {
-      setAllRoutinesByCategory(data);
-    });
-  }, [category, myRoutine]);
+    if (!isLoading) {
+      fetchAllRoutinesByCategory(category).then((data) => {
+        setAllRoutinesByCategory(data);
+      });
+    }
+  }, [category, myRoutine, isLoading]);
 
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <div>
         <Title>오늘의 루틴</Title>
         <RoutineBox>
-          {myRoutine.map((data, i) => (
-            <MyRoutineCard
-              key={data.routineId}
-              routineId={data.routineId}
-              title={data.name}
-              isCompleted={data.isCompleted}
-              isLast={data.length === i + 1}
-            />
-          ))}
+          {myRoutine.length > 0 ? (
+            myRoutine.map((data, i) => (
+              <MyRoutineCard
+                key={data.routineId}
+                routineId={data.routineId}
+                title={data.name}
+                isCompleted={data.isCompleted}
+                isLast={data.length === i + 1}
+              />
+            ))
+          ) : (
+            <NoRoutineWrapper>
+              <NoRoutineText>현재 진행 중인 루틴이 없습니다.</NoRoutineText>
+              <NoRoutineText>내 일상에 만들고 싶은 루틴을 추가해보세요!</NoRoutineText>
+            </NoRoutineWrapper>
+          )}
         </RoutineBox>
       </div>
       <Line />
@@ -93,7 +107,6 @@ const RoutineBox = styled.div`
   border-radius: 12px;
   overflow: hidden;
   margin-top: 20px;
-
   box-shadow: rgb(0, 0, 0, 0.1) 3px 4px 18px 1px;
 `;
 
@@ -106,4 +119,16 @@ const CategoryBox = styled.div`
   display: flex;
   column-gap: 14px;
   margin-top: 20px;
+`;
+
+const NoRoutineWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+`;
+
+const NoRoutineText = styled.p`
+  margin: 8px 0;
 `;

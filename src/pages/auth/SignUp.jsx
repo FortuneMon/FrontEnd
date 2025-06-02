@@ -62,23 +62,26 @@ const SignUp = () => {
     },
   });
 
-  // TODO 중복 체크 API 추가 되면 수정
   const onCheckId = useCallback(async () => {
     if (!values.id) return;
-    const result = await checkId({ id: values.id });
-    if (result) {
+    const result = await checkId(values.id);
+    if (result._confirmed) {
+      toast.success(result.message);
       setChecked((prev) => ({ ...prev, id: true }));
     } else {
+      toast.error(result.message);
       setChecked((prev) => ({ ...prev, id: false }));
     }
   }, [values]);
 
   const onCheckNickname = useCallback(async () => {
     if (!values.nickname) return;
-    const result = await checkNickname({ nickname: values.nickname });
-    if (result) {
+    const result = await checkNickname(values.nickname);
+    if (result._confirmed) {
+      toast.success(result.message);
       setChecked((prev) => ({ ...prev, nickname: true }));
     } else {
+      toast.error(result.message);
       setChecked((prev) => ({ ...prev, nickname: false }));
     }
   }, [values]);

@@ -7,8 +7,11 @@ import AppColor from "../utils/AppColor";
 import Calendar from "../components/charts/Calendar";
 import { fetchMyStatistics } from "../apis/RoutineApi";
 import { getRandomItems } from "../utils/AppUtils";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const ChartPage = () => {
+  const { isLoading } = useLoginLoading();
+
   const [selectedDate, setSelectedDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
@@ -42,28 +45,37 @@ const ChartPage = () => {
   }, [statistics]);
 
   useEffect(() => {
-    fetchMyStatistics(selectedDate.year, selectedDate.month).then((s) => {
-      setStatistics(s);
-    });
-  }, [selectedDate]);
+    if (!isLoading) {
+      fetchMyStatistics(selectedDate.year, selectedDate.month).then((s) => {
+        setStatistics(s);
+      });
+    }
+  }, [isLoading, selectedDate]);
 
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <Title>통계</Title>
       <FlexBox>
         <DateCarousel selectedDate={selectedDate} onClick={onClickDateCarousel} />
-        <GridBox>
-          {statistics.map((s, i) => (
-            <Calendar
-              key={s.routineId}
-              routineName={s.routineName}
-              year={selectedDate.year}
-              month={selectedDate.month}
-              data={s.daysStatistics}
-              themeColor={calendarThemeColorList[i]}
-            />
-          ))}
-        </GridBox>
+        {statistics.length > 0 ? (
+          <GridBox>
+            {statistics.map((s, i) => (
+              <Calendar
+                key={s.routineId}
+                routineName={s.routineName}
+                year={selectedDate.year}
+                month={selectedDate.month}
+                data={s.daysStatistics}
+                themeColor={calendarThemeColorList[i]}
+              />
+            ))}
+          </GridBox>
+        ) : (
+          <NoRoutineBox>
+            <NoRoutineText>현재 진행 중인 루틴이 없습니다.</NoRoutineText>
+            <NoRoutineText>내 일상에 만들고 싶은 루틴을 추가해보세요!</NoRoutineText>
+          </NoRoutineBox>
+        )}
       </FlexBox>
     </MainLayout>
   );
@@ -86,4 +98,22 @@ const GridBox = styled.div`
   grid-column-gap: 14px;
   width: calc(100% - 40px);
   padding: 10px 0 20px;
+`;
+
+const NoRoutineBox = styled.div`
+  background-color: ${AppColor.white};
+  border-radius: 12px;
+  border: 1px solid ${AppColor.border.gray};
+  box-shadow: rgb(0, 0, 0, 0.1) 3px 4px 18px 1px;
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0 40px;
+  padding: 40px 0;
+`;
+
+const NoRoutineText = styled.p`
+  margin: 8px 0;
 `;
