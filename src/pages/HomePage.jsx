@@ -1,21 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Title from "../components/layouts/Title";
-import { useNavContext } from "../apis/NavContext";
 import MainLayout from "../components/layouts/MainLayout";
 import MyRoutineCard from "../components/routines/MyRoutineCard";
 import RoutineCard from "../components/routines/RoutineCard";
 import AppColor from "../utils/AppColor";
 import Constants from "../utils/constants";
 import RoutineCategoryChip from "../components/routines/RoutineCategoryChip";
+import { fetchAllRoutinesByCategory } from "../apis/RoutineApi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyRoutines } from "../store/thunks/user";
+import { selectMyRoutines } from "../store/slices/user";
 
 const HomePage = () => {
-  // const { setActiveNav } = useNavContext();
-  // useEffect(() => {
-  //   setActiveNav(0);
-  // }, []);
-  // TODO 로그인 연동 후 hooks로 isLoggedIn 체크
-  const isLoggedIn = true;
+  const dispatch = useDispatch();
 
   const [category, setCategory] = useState(Constants.routineCategory[0].title);
   const onClickCategory = useCallback(
@@ -25,48 +23,36 @@ const HomePage = () => {
     []
   );
 
-  const dummyData = [
-    { routineId: 1, title: "공복에 물 마시기", isCompleted: false },
-    { routineId: 2, title: "이불 정리", isCompleted: true },
-    { routineId: 3, title: "운동하기", isCompleted: false },
-    { routineId: 4, title: "긍정적인 생각하기", isCompleted: false },
-  ];
-  const dummyData2 = [
-    { routineId: 1, title: "공복에 물 마시기", isRegistered: false },
-    { routineId: 2, title: "이불 정리", isRegistered: true },
-    { routineId: 3, title: "운동하기", isRegistered: false },
-    { routineId: 4, title: "긍정적인 생각하기", isRegistered: false },
-  ];
+  const myRoutine = useSelector(selectMyRoutines);
+  const [allRoutinesByCategory, setAllRoutinesByCategory] = useState([]);
 
   useEffect(() => {
-    // TODO 내 루틴 정보 불러오기
-  }, []);
+    dispatch(fetchMyRoutines());
+  }, [dispatch]);
 
   useEffect(() => {
-    // TODO 모든 루틴 정보 불러오기
-  }, []);
+    fetchAllRoutinesByCategory(category).then((data) => {
+      setAllRoutinesByCategory(data);
+    });
+  }, [category, myRoutine]);
 
   return (
     <MainLayout>
-      {isLoggedIn && (
-        <>
-          <div>
-            <Title>오늘의 루틴</Title>
-            <RoutineBox>
-              {dummyData.map((data, i) => (
-                <MyRoutineCard
-                  key={data.routineId}
-                  routineId={data.routineId}
-                  title={data.title}
-                  isCompleted={data.isCompleted}
-                  isLast={dummyData.length === i + 1}
-                />
-              ))}
-            </RoutineBox>
-          </div>
-          <Line />
-        </>
-      )}
+      <div>
+        <Title>오늘의 루틴</Title>
+        <RoutineBox>
+          {myRoutine.map((data, i) => (
+            <MyRoutineCard
+              key={data.routineId}
+              routineId={data.routineId}
+              title={data.name}
+              isCompleted={data.isCompleted}
+              isLast={data.length === i + 1}
+            />
+          ))}
+        </RoutineBox>
+      </div>
+      <Line />
 
       <div>
         <Title>추천 루틴</Title>
@@ -82,13 +68,13 @@ const HomePage = () => {
           ))}
         </CategoryBox>
         <RoutineBox>
-          {dummyData2.map((data, i) => (
+          {allRoutinesByCategory.map((data, i) => (
             <RoutineCard
-              key={data.routineId}
-              routineId={data.routineId}
-              title={data.title}
-              isRegistered={data.isRegistered}
-              isLast={dummyData.length === i + 1}
+              key={data.id}
+              routineId={data.id}
+              title={data.name}
+              isRegistered={data.selected}
+              isLast={data.length === i + 1}
             />
           ))}
         </RoutineBox>
