@@ -1,38 +1,116 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import TopNav from "../components/layouts/TopNav";
 import Nav from "../components/layouts/Nav";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import { useNavigate } from "react-router-dom";
+import { getMyInfo } from "../apis/UserApi";
+import { getMyData } from "../apis/PokeApi";
 
 const MyPage = () => {
   // ✅ 임시 로그인 상태 (기본값: true → 로그인 상태로 시작)
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const navigate = useNavigate();
+
+  // const handleLogin = () => {
+  //   setIsLoggedIn(true);
+  // };
+
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  // };
+
+  const [user, setUser] = useState(null); // 사용자 정보 저장
+  const [loading, setLoading] = useState(true); // 로딩 상태
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const result = await getMyData();
+        setUser(result);
+      } catch (error) {
+        console.error("내 정보 불러오기 실패", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchUser();
+  }, []);
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    // 로그아웃 API 호출 + 상태 초기화
+    // axios.post("/api/logout").then(() => {
+    //   setUser(null);
+    // });
   };
+
+  if (loading) return <div>로딩 중...</div>;
+
+  // return (
+  //   <MainLayout>
+  //     <Title>내 정보</Title>
+  //     <FlexBox>
+  //       {isLoggedIn ? (
+  //         <UserBoxLogin>
+  //           <UserBox>
+  //             <img src="img/UserImg.png" alt="user" />
+  //             <NameBox>
+  //               <UserName>홍길동</UserName>
+  //               <PokeName>
+  //                 <img src="img/Partner.png" alt="partner" />
+  //                 &nbsp;파트너 포켓몬
+  //               </PokeName>
+  //             </NameBox>
+  //             <img src="img/Logo.png" alt="logo" />
+  //           </UserBox>
+  //           <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
+  //         </UserBoxLogin>
+  //       ) : (
+  //         <UserBoxLogout>
+  //           <ButtonLogout onClick={handleLogin}>로그인</ButtonLogout>
+  //         </UserBoxLogout>
+  //       )}
+
+  //       <ContentBox>
+  //         <Content onClick={() => navigate("/pokeball")}>
+  //           <div className="corner top-left" />
+  //           <div className="corner top-right" />
+  //           <div className="corner bottom-left" />
+  //           <div className="corner bottom-right" />
+  //           <img src="img/MonsterBall.png" alt="ball" />
+  //           <SubTitle>포켓몬 뽑기</SubTitle>
+  //         </Content>
+  //         <Content onClick={() => navigate("/pokedev")}>
+  //           <div className="corner top-left" />
+  //           <div className="corner top-right" />
+  //           <div className="corner bottom-left" />
+  //           <div className="corner bottom-right" />
+  //           <img src="img/PokeDex.png" alt="dex" />
+  //           <SubTitle>포켓몬 도감</SubTitle>
+  //         </Content>
+  //       </ContentBox>
+  //     </FlexBox>
+  //   </MainLayout>
+  // );
 
   return (
     <MainLayout>
       <Title>내 정보</Title>
       <FlexBox>
-        {isLoggedIn ? (
+        {user ? (
           <UserBoxLogin>
             <UserBox>
-              <img src="img/UserImg.png" alt="user" />
+              <img src={user.profileImage || "img/UserImg.png"} alt="user" />
               <NameBox>
-                <UserName>홍길동</UserName>
+                <UserName>{user.name}</UserName>
                 <PokeName>
                   <img src="img/Partner.png" alt="partner" />
-                  &nbsp;파트너 포켓몬
+                  &nbsp;{user.partnerPokemon || "파트너 포켓몬"}
                 </PokeName>
               </NameBox>
               <img src="img/Logo.png" alt="logo" />
@@ -41,7 +119,9 @@ const MyPage = () => {
           </UserBoxLogin>
         ) : (
           <UserBoxLogout>
-            <ButtonLogout onClick={handleLogin}>로그인</ButtonLogout>
+            <ButtonLogout onClick={() => navigate("/login")}>
+              로그인
+            </ButtonLogout>
           </UserBoxLogout>
         )}
 
