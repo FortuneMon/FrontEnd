@@ -6,8 +6,8 @@ import axios from "axios";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import Main from "../components/layouts/Main";
-import { drawTodayFortune, getTodayFortune } from "../apis/Fortune";
 import useLoginLoading from "../hooks/useLoginLoading";
+import { drawTodayFortune, getTodayFortune } from "../apis/FortuneApi";
 
 const dummyFortune = {
   재물운:
