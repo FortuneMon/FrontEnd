@@ -9,19 +9,6 @@ import { getMyInfo } from "../apis/UserApi";
 import { getMyData } from "../apis/PokeApi";
 
 const MyPage = () => {
-  // ✅ 임시 로그인 상태 (기본값: true → 로그인 상태로 시작)
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // const navigate = useNavigate();
-
-  // const handleLogin = () => {
-  //   setIsLoggedIn(true);
-  // };
-
-  // const handleLogout = () => {
-  //   setIsLoggedIn(false);
-  // };
-
   const [user, setUser] = useState(null); // 사용자 정보 저장
   const [loading, setLoading] = useState(true); // 로딩 상태
 
@@ -107,13 +94,19 @@ const MyPage = () => {
             <UserBox>
               <img src={user.profileImage || "img/UserImg.png"} alt="user" />
               <NameBox>
-                <UserName>{user.name}</UserName>
+                <UserName>{user.nickName}</UserName>
                 <PokeName>
                   <img src="img/Partner.png" alt="partner" />
                   &nbsp;{user.partnerPokemon || "파트너 포켓몬"}
                 </PokeName>
               </NameBox>
-              <img src="img/Logo.png" alt="logo" />
+              {user.url && user.pokemonId ? (
+                <img src={user.url} alt="logo" />
+              ) : (
+                <NoParterPokemon>
+                  파트너 포켓몬을<br></br>설정해주세요
+                </NoParterPokemon>
+              )}
             </UserBox>
             <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
           </UserBoxLogin>
@@ -226,6 +219,13 @@ const PokeName = styled.div`
     width: 1rem;
     height: 1rem;
   }
+`;
+
+const NoParterPokemon = styled.div`
+  width: 100px;
+  font-size: 0.9rem;
+  color: #aaa;
+  fontstyle: italic;
 `;
 
 const ButtonLogin = styled.div`
