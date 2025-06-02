@@ -84,6 +84,13 @@ const dummyPokeBalls = [
   },
 ];
 
+const ballImages = {
+  1: "/img/balls/MonsterBall.png",
+  2: "/img/balls/SuperBall.png",
+  3: "/img/balls/HyperBall.png",
+  4: "/img/balls/MasterBall.png",
+};
+
 const PokeBallPage = () => {
   // 유저가 가진 포켓볼 목록을 관리하는 상태
   const [pokeBalls, setPokeBalls] = useState([]);
@@ -94,7 +101,8 @@ const PokeBallPage = () => {
   const [isFlashing, setIsFlashing] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [capturedPokemon, setCapturedPokemon] = useState(null);
-
+  const [selectedBallId, setSelectedBallId] = useState(null);
+  const [selectedBallKeyId, setSelectedBallKeyId] = useState(null);
   const captureMusicRef = useRef(null);
 
   useEffect(() => {
@@ -110,6 +118,10 @@ const PokeBallPage = () => {
     loadBalls();
   }, []);
 
+  useEffect(() => {
+    console.log("selectedBallId가 변경됨:", selectedBallId);
+  }, [selectedBallId]);
+
   const handleDraw = async (ballType) => {
     try {
       const result = await openPokemonByBall(ballType);
@@ -122,41 +134,83 @@ const PokeBallPage = () => {
 
   const openDrawModal = (ball) => {
     setSelectedBall(ball);
+    setSelectedBallId(ball.ballId);
+    setSelectedBallKeyId(ball.id);
+    console.log("선택한 볼:", ball);
+    console.log("현재 선택한 볼 ID:", selectedBallId);
+    console.log("현재 선택한 볼의 고유 Key ID:", selectedBallKeyId);
     openModal(); // 모달 열기
   };
 
-  //   const confirmDraw = async () => {
-  //     if (!selectedBall) return;
-  //     try {
-  //       const result = await openPokemonByBall(selectedBall.ballName);
-  //       alert(`${result.name}을(를) 뽑았습니다!`);
-  //     } catch (error) {
-  //       alert("뽑기 실패! 다시 시도해주세요.");
-  //     }
-  //     closeModal(); // 모달 닫기
-  //   };
+  // const confirmDraw = async () => {
+  //   if (!selectedBall) return;
+  //   try {
+  //     const result = await openPokemonByBall(selectedBall.ballName);
+  //     alert(`${result.name}을(를) 뽑았습니다!`);
+  //   } catch (error) {
+  //     alert("뽑기 실패! 다시 시도해주세요.");
+  //   }
+  //   closeModal(); // 모달 닫기
+  // };
 
-  // 더미데이터용 뽑기 함수
-  const confirmDraw = () => {
-    setIsAnimating(true); // 흔들림 시작
+  const confirmDraw = async () => {
+    if (!selectedBall) return;
 
-    setTimeout(() => {
-      setIsAnimating(false); // 흔들림 끝
-      setIsFlashing(true); // 번쩍임 시작
+    // 흔들림 시작
+    setIsAnimating(true);
 
-      setTimeout(() => {
+    setTimeout(async () => {
+      // 흔들림 끝
+      setIsAnimating(false);
+
+      // 번쩍임 시작
+      setIsFlashing(true);
+
+      setTimeout(async () => {
         setIsFlashing(false); // 번쩍임 끝
 
-        // 포켓몬 등장 + 음악 재생
-        const random = Math.floor(Math.random() * myPokemonListDemo.length);
-        setCapturedPokemon(myPokemonListDemo[random]);
+        try {
+          // 실제 API 호출
+          console.log("현재 오픈한 선택한 볼 ID:", selectedBallId);
+          console.log("현재 선택한 볼의 고유 Key ID:", selectedBallKeyId);
+          const result = await openPokemonByBall(selectedBallKeyId);
 
-        // 음악 재생 (오디오 ref 또는 Audio 객체)
+          console.log("뽑은 포켓몬 정보 1:", result);
 
-        captureMusicRef.current?.play();
-      }, 800); // 번쩍임 시간 0.8초
-    }, 2000); // 흔들림 시간 2초
+          // 등장 포켓몬 설정
+          setCapturedPokemon(result); // result에 name, image 등 있다고 가정
+
+          console.log("뽑은 포켓몬 정보 2:", capturedPokemon);
+          // 음악 재생
+          captureMusicRef.current?.play();
+        } catch (error) {
+          alert("뽑기 실패! 다시 시도해주세요.");
+        }
+      }, 800); // 번쩍임 시간
+    }, 2000); // 흔들림 시간
   };
+
+  // 더미데이터용 뽑기 함수
+  // const confirmDraw = () => {
+  //   setIsAnimating(true); // 흔들림 시작
+
+  //   setTimeout(() => {
+  //     setIsAnimating(false); // 흔들림 끝
+  //     setIsFlashing(true); // 번쩍임 시작
+
+  //     setTimeout(() => {
+  //       setIsFlashing(false); // 번쩍임 끝
+
+  //       // 포켓몬 등장 + 음악 재생
+  //       const random = Math.floor(Math.random() * myPokemonListDemo.length);
+  //       setCapturedPokemon(myPokemonListDemo[random]);
+
+  //       // 음악 재생 (오디오 ref 또는 Audio 객체)
+
+  //       captureMusicRef.current?.play();
+  //     }, 800); // 번쩍임 시간 0.8초
+  //   }, 2000); // 흔들림 시간 2초
+  // };
 
   //   const cancelDraw = () => {
   //     closeModal(); // 모달 닫기
@@ -167,6 +221,14 @@ const PokeBallPage = () => {
     closeModal();
     setCapturedPokemon(null);
     setIsAnimating(false);
+    window.location.reload(); // 페이지 새로고침
+  };
+
+  const cancelDrawPokemon = () => {
+    closeModal();
+    setCapturedPokemon(null);
+    setIsAnimating(false);
+    window.location.reload(); // 페이지 새로고침
   };
 
   return (
@@ -174,15 +236,23 @@ const PokeBallPage = () => {
       <Title>내 가방</Title>
       <PokemonGrid>
         {pokeBalls.map((ball) => (
-          <BallCard key={ball.ballName} onClick={() => openDrawModal(ball)}>
+          <BallCard
+            key={ball.ballName}
+            isUsed={ball.open}
+            onClick={() => openDrawModal(ball)}
+          >
             <BallImgWrapper>
               <div className="corner top-left" />
               <div className="corner top-right" />
               <div className="corner bottom-left" />
               <div className="corner bottom-right" />
-              <BallImg src={ball.url} alt={ball.ballName} />
+              <BallImg
+                src={ballImages[ball.ballId]}
+                isUsed={ball.open}
+                alt={`ball-${ball.ballId}`}
+              />
             </BallImgWrapper>
-            <BallCount>{ball.count}개</BallCount>
+            <BallDate>{ball.created_at.split("T")[0]}</BallDate>
           </BallCard>
         ))}
       </PokemonGrid>
@@ -215,12 +285,12 @@ const PokeBallPage = () => {
                 />
                 <PokeMonName>{capturedPokemon.name}</PokeMonName>
                 <PokeMonGroup>{capturedPokemon.group}</PokeMonGroup>
-                <ModalButton onClick={cancelDraw}>닫기</ModalButton>
+                <ModalButton onClick={cancelDrawPokemon}>닫기</ModalButton>
               </>
             ) : (
               <>
                 <BallImgAnimated
-                  src={selectedBall?.url}
+                  src={ballImages[selectedBallId]}
                   alt={selectedBall?.ballName}
                   isShaking={isAnimating}
                 />
@@ -270,6 +340,9 @@ const BallCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  filter: ${(props) => (props.isUsed ? "grayscale(100%)" : "none")};
+  pointer-events: ${(props) => (props.isUsed ? "none" : "auto")};
 `;
 
 const BallImgWrapper = styled.div`
@@ -379,6 +452,9 @@ const BallImgWrapper = styled.div`
 const BallImg = styled.img`
   width: 100%;
   height: 100%;
+
+  filter: ${(props) => (props.isUsed ? "grayscale(100%)" : "none")};
+  pointer-events: ${(props) => (props.isUsed ? "none" : "auto")};
 `;
 
 const BallImgAnimated = styled.img`
@@ -392,10 +468,11 @@ const BallImgAnimated = styled.img`
     `}
 `;
 
-const BallCount = styled.div`
+const BallDate = styled.div`
   margin-top: 0.3rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: black;
+  font-weight: 600;
 `;
 
 const ModalOverlay = styled.div`

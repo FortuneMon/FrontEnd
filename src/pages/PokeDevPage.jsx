@@ -90,6 +90,7 @@ const PokeDevPage = () => {
       try {
         const data = await fetchMyPokemons();
         setMyPokemonList(data);
+        console.log("내 포켓몬 목록:", data);
       } catch (error) {
         setMyPokemonList(myPokemonListDemo); // 임시 데이터로 대체
         toast.error("포켓몬 목록을 불러오지 못했습니다.");
@@ -102,7 +103,6 @@ const PokeDevPage = () => {
   // 파트너 포켓몬 등록
   const handleSetPartner = async () => {
     if (!selectedPokemon) {
-      alert("먼저 포켓몬을 선택해주세요.");
       toast.error("먼저 포켓몬을 선택해주세요.");
       return;
     }
@@ -175,7 +175,7 @@ const PokeDevPage = () => {
                   </>
                 )}
                 <PokeCardImg
-                  src={pokemon.image}
+                  src={pokemon.url}
                   alt={pokemon.name}
                   owned={pokemon.owned}
                 />

@@ -45,6 +45,7 @@ export const openPokemonByBall = async (ballId) => {
     const { data } = await axiosInstance.post(
       `/${prefix}/balls/${ballId}/open`
     );
+    console.log("포켓몬 뽑기 결과:", data);
     return data;
   } catch (error) {
     console.error("포켓몬 뽑기 실패:", error);
@@ -58,6 +59,7 @@ export async function getMyData() {
     const {
       data: { result },
     } = await axiosInstance.get(`${prefix}/info`);
+    console.log("내 정보:", result);
     return result;
   } catch (error) {
     console.error(error);

@@ -19,25 +19,43 @@ const dummyFortune = {
     "건강에 대한 걱정이 생기는 날입니다. 몸이 아프거나 병원에 가게 되는 일이 생길 수 있습니다. 특히 평소에 건강에 문제가 있었던 분들은 오늘은 병원에 가서 검사를 받는 것이 좋습니다. 오늘은 몸의 이상을 발견하고 치료를 받는 것이 좋습니다. 또한, 오늘은 스트레스가 쌓이기 쉬운 날이니 스트레스를 해소할 수 있는 방법을 찾아보는 것이 좋습니다.",
 };
 
-const categories = ["love", "health", "wealth"];
-
 const FortunePage = () => {
-  const [fortune, setFortune] = useState(null);
+  const [fortune, setFortune] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [love, setLove] = useState("");
+  const [health, setHealth] = useState("");
+  const [wealth, setWealth] = useState("");
 
   // 오늘의 운세 조회
   useEffect(() => {
     const fetchFortune = async () => {
       try {
         const res = await getTodayFortune();
+
         if (Array.isArray(res) && res.length === 0) {
-          setFortune(null); // 아직 운세 안 뽑음
+          setFortune([]);
         } else if (res) {
+          console.log("오늘의 운세:", res);
           setFortune(res);
+
+          // 카테고리별 운세 추출
+          const loveFortune = res.find((f) => f.category === "love");
+          const healthFortune = res.find((f) => f.category === "health");
+          const wealthFortune = res.find((f) => f.category === "wealth");
+
+          setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
+          setHealth(
+            healthFortune?.content || "건강 카테고리 루틴을 추가해주세요"
+          );
+          setWealth(
+            wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요"
+          );
         }
       } catch (error) {
         console.error("운세 불러오기 실패:", error);
-        setFortune(dummyFortune.애정운); // 더미용 fallback
+        setLove("애정운 불러오기 실패");
+        setHealth("건강운 불러오기 실패");
+        setWealth("재물운 불러오기 실패");
       } finally {
         setLoading(false);
       }
@@ -50,11 +68,26 @@ const FortunePage = () => {
     try {
       const res = await drawTodayFortune("love", "health", "wealth");
       if (res?.fortune) {
-        setFortune(res.fortune);
+        const drawn = res.fortune;
+        setFortune(drawn);
+
+        const loveFortune = drawn.find((f) => f.category === "love");
+        const healthFortune = drawn.find((f) => f.category === "health");
+        const wealthFortune = drawn.find((f) => f.category === "wealth");
+
+        setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
+        setHealth(
+          healthFortune?.content || "건강 카테고리 루틴을 추가해주세요"
+        );
+        setWealth(
+          wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요"
+        );
       }
     } catch (error) {
       console.error("운세 뽑기 실패:", error);
-      setFortune(dummyFortune.로또운); // fallback
+      setLove("애정운 fallback");
+      setHealth("건강운 fallback");
+      setWealth("재물운 fallback");
     }
   };
 
@@ -63,21 +96,58 @@ const FortunePage = () => {
       <Title>오늘의 운세 뽑기</Title>
       <FlexBox>
         <ContentBox>
-          {!fortune ? (
+          {/* {!fortune.length ? (
             <ImgBox>
-              <img src="img/Fortune.png" alt="" />
+              <img src="img/Fortune.png" alt="포츈기계" />
             </ImgBox>
+          ) : null}
+
+          {!loading && !fortune.length ? (
+            <FortuneBtn onClick={handleDrawFortune}>
+              오늘의 운세를 뽑아주세요
+            </FortuneBtn>
           ) : (
-            <></>
-          )}
-          {!loading &&
-            (fortune ? (
-              <FortuneText>{fortune}</FortuneText>
-            ) : (
+            <FortuneBox>
+              <FortuneCard>
+                <FortuneCategoryTitle>💘 애정운</FortuneCategoryTitle>
+                <FortuneText>{love}</FortuneText>
+              </FortuneCard>
+              <div>
+                <FortuneCategoryTitle>💪 건강운</FortuneCategoryTitle>
+                <FortuneText>{health}</FortuneText>
+              </div>
+              <div>
+                <FortuneCategoryTitle>💰 재물운</FortuneCategoryTitle>
+                <FortuneText>{wealth}</FortuneText>
+              </div>
+            </FortuneBox>
+          )} */}
+
+          {loading ? null : !fortune.length ? (
+            <>
+              <ImgBox>
+                <img src="img/Fortune.png" alt="포츈기계" />
+              </ImgBox>
               <FortuneBtn onClick={handleDrawFortune}>
                 오늘의 운세를 뽑아주세요
               </FortuneBtn>
-            ))}
+            </>
+          ) : (
+            <FortuneBox>
+              <FortuneCard>
+                <FortuneCategoryTitle>💘 애정운</FortuneCategoryTitle>
+                <FortuneText>{love}</FortuneText>
+              </FortuneCard>
+              <FortuneCard>
+                <FortuneCategoryTitle>💪 건강운</FortuneCategoryTitle>
+                <FortuneText>{health}</FortuneText>
+              </FortuneCard>
+              <FortuneCard>
+                <FortuneCategoryTitle>💰 재물운</FortuneCategoryTitle>
+                <FortuneText>{wealth}</FortuneText>
+              </FortuneCard>
+            </FortuneBox>
+          )}
         </ContentBox>
       </FlexBox>
 
@@ -94,7 +164,7 @@ const FlexBox = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  max-height: calc(100% - 100px);
+  // max-height: calc(100% - 100px);
   width: 100%;
 `;
 
@@ -132,6 +202,24 @@ const FortuneBtn = styled.button`
   margin-top: 20px;
 `;
 
+const FortuneBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+const FortuneCard = styled.div`
+  width: 100%;
+`;
+
+const FortuneCategoryTitle = styled.h3`
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: black; /* 포인트 색상 */
+`;
+
 const FortuneText = styled.div`
   font-size: 1.2rem;
   text-align: center;
@@ -140,7 +228,7 @@ const FortuneText = styled.div`
   padding: 1rem;
   border-radius: 10px;
   width: 90%;
-  max-height: calc(100vh - 300px);
+  max-height: 300px;
   overflow-y: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
