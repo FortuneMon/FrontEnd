@@ -7,12 +7,9 @@ const Nav = () => {
   // 사실상 setActiveNav 호출이 불필요 NavContext에서 url이 이동하면 자동으로 실행되기에
   const { activeNav, setActiveNav } = useNavContext(); // 상태 및 setter 가져오기
   const navigate = useNavigate();
-  const storedActiveNav = localStorage.getItem("activeNav");
 
   const handleNavClick = (index, path) => {
-    // setActiveNav(index);
     navigate(path);
-    console.log(activeNav);
   };
 
   return (
@@ -20,7 +17,7 @@ const Nav = () => {
       <IconList>
         <IconButton
           onClick={() => handleNavClick(0, "/")}
-          isActive={activeNav === 0}
+          $isactive={activeNav === 0}
         >
           <img
             src={activeNav === 0 ? "/icon/HomeBlack.png" : "/icon/HomeGray.png"}
@@ -30,7 +27,7 @@ const Nav = () => {
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(1, "/chart")}
-          isActive={activeNav === 1}
+          $isactive={activeNav === 1}
         >
           <img
             src={activeNav === 1 ? "/icon/ChartBlack.png" : "/icon/Chart.png"}
@@ -40,7 +37,7 @@ const Nav = () => {
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(2, "/fortune")}
-          isActive={activeNav === 2}
+          $isactive={activeNav === 2}
         >
           <img
             src={
@@ -54,7 +51,7 @@ const Nav = () => {
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(3, "/mypage")}
-          isActive={activeNav === 3}
+          $isactive={activeNav === 3}
         >
           <img
             src={activeNav === 3 ? "/icon/UserBlack.png" : "/icon/UserGray.png"}
@@ -102,8 +99,6 @@ const IconList = styled.ul`
   list-style: none;
 `;
 
-const IconBox = styled.div``;
-
 const IconButton = styled.button`
   // flex: 1;
   // padding: 0.5rem; // 위아래로 패딩 추가하여 클릭 가능한 영역을 확장
@@ -119,7 +114,7 @@ const IconButton = styled.button`
 
   span {
     font-size: 0.6rem;
-     color: ${({ isActive }) => (isActive ? "black" : "#c9c9c9")};
+     color: ${({ $isactive }) => ($isactive ? "black" : "#c9c9c9")};
   }
   img {
     width: 1.2rem;

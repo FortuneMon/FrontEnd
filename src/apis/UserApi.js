@@ -12,10 +12,12 @@ export async function login(params) {
       data: { result },
     } = await axiosInstance.post(`${prefix}/signin`, params);
     const accessToken = result.accessToken;
-    const refershToken = result.refershToken;
+    const refreshToken = result.refreshToken;
     localStorage.setItem("accessToken", accessToken);
+    // refresh 저장
+    localStorage.setItem("refreshToken", refreshToken);
     axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    return { accessToken, refershToken };
+    return { accessToken, refreshToken };
   } catch (error) {
     console.error(error);
     throw error;

@@ -6,6 +6,7 @@ import axios from "axios";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import Main from "../components/layouts/Main";
+import { drawTodayFortune, getTodayFortune } from "../apis/Fortune";
 
 const dummyFortune = {
   재물운:
@@ -18,6 +19,8 @@ const dummyFortune = {
     "건강에 대한 걱정이 생기는 날입니다. 몸이 아프거나 병원에 가게 되는 일이 생길 수 있습니다. 특히 평소에 건강에 문제가 있었던 분들은 오늘은 병원에 가서 검사를 받는 것이 좋습니다. 오늘은 몸의 이상을 발견하고 치료를 받는 것이 좋습니다. 또한, 오늘은 스트레스가 쌓이기 쉬운 날이니 스트레스를 해소할 수 있는 방법을 찾아보는 것이 좋습니다.",
 };
 
+const categories = ["love", "health", "wealth"];
+
 const FortunePage = () => {
   const [fortune, setFortune] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,13 +29,15 @@ const FortunePage = () => {
   useEffect(() => {
     const fetchFortune = async () => {
       try {
-        const response = await axios.get("/api/fortune/today"); // 예시 엔드포인트
-        if (response.data?.fortune) {
-          setFortune(response.data.fortune);
+        const res = await getTodayFortune();
+        if (Array.isArray(res) && res.length === 0) {
+          setFortune(null); // 아직 운세 안 뽑음
+        } else if (res) {
+          setFortune(res);
         }
       } catch (error) {
         console.error("운세 불러오기 실패:", error);
-        // setFortune(dummyFortune.애정운);
+        setFortune(dummyFortune.애정운); // 더미용 fallback
       } finally {
         setLoading(false);
       }
@@ -43,15 +48,13 @@ const FortunePage = () => {
 
   const handleDrawFortune = async () => {
     try {
-      const response = await axios.post(
-        "http://43.201.162.24:8080/users/fortune"
-      );
-      if (response.data?.fortune) {
-        setFortune(response.data.fortune);
+      const res = await drawTodayFortune("love", "health", "wealth");
+      if (res?.fortune) {
+        setFortune(res.fortune);
       }
     } catch (error) {
       console.error("운세 뽑기 실패:", error);
-      setFortune(dummyFortune.로또운);
+      setFortune(dummyFortune.로또운); // fallback
     }
   };
 

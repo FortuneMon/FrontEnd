@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import { fetchMyPokemons, setPartnerPokemon } from "../apis/PokeApi";
 
 const myPokemonListDemo = [
@@ -91,9 +92,10 @@ const PokeDevPage = () => {
         setMyPokemonList(data);
       } catch (error) {
         setMyPokemonList(myPokemonListDemo); // 임시 데이터로 대체
-        alert("포켓몬 목록을 불러오지 못했습니다.");
+        toast.error("포켓몬 목록을 불러오지 못했습니다.");
       }
     };
+
     loadPokemons();
   }, []);
 
@@ -101,18 +103,19 @@ const PokeDevPage = () => {
   const handleSetPartner = async () => {
     if (!selectedPokemon) {
       alert("먼저 포켓몬을 선택해주세요.");
+      toast.error("먼저 포켓몬을 선택해주세요.");
       return;
     }
 
     if (!selectedPokemon.owned) {
-      alert("소유한 포켓몬만 파트너로 설정할 수 있습니다.");
+      toast.error("소유한 포켓몬만 파트너로 설정할 수 있습니다.");
       return;
     }
 
     try {
       await setPartnerPokemon(selectedPokemon.id);
     } catch (error) {
-      alert("파트너 설정 중 오류가 발생했습니다.");
+      toast.error("파트너 설정 중 오류가 발생했습니다.");
     }
   };
 
@@ -126,7 +129,7 @@ const PokeDevPage = () => {
         </ParterBox>
       </TitleFlexBox>
       {/* 선택한 포켓몬 정보 영역 */}
-      <InfoBox selectedPokemon={selectedPokemon}>
+      <InfoBox $selectedPokemon={selectedPokemon}>
         {selectedPokemon ? (
           <>
             <PokeImg
@@ -216,7 +219,7 @@ const ParterBox = styled.div`
   }
 `;
 
-const InfoBox = styled.div`
+const InfoBox = styled.div.attrs((props) => ({}))`
   padding: 1rem;
   background-color: white;
   border-radius: 1rem;
@@ -225,8 +228,7 @@ const InfoBox = styled.div`
   text-align: center;
   margin: 1.5rem 10px;
 
-  display: flex;
-  display: ${({ selectedPokemon }) => (selectedPokemon ? "flex" : "block")};
+  display: ${({ $selectedPokemon }) => ($selectedPokemon ? "flex" : "block")};
   align-items: center;
 `;
 
