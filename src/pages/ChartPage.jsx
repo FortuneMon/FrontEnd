@@ -7,8 +7,11 @@ import AppColor from "../utils/AppColor";
 import Calendar from "../components/charts/Calendar";
 import { fetchMyStatistics } from "../apis/RoutineApi";
 import { getRandomItems } from "../utils/AppUtils";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const ChartPage = () => {
+  const { isLoading } = useLoginLoading();
+
   const [selectedDate, setSelectedDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
@@ -42,13 +45,15 @@ const ChartPage = () => {
   }, [statistics]);
 
   useEffect(() => {
-    fetchMyStatistics(selectedDate.year, selectedDate.month).then((s) => {
-      setStatistics(s);
-    });
-  }, [selectedDate]);
+    if (!isLoading) {
+      fetchMyStatistics(selectedDate.year, selectedDate.month).then((s) => {
+        setStatistics(s);
+      });
+    }
+  }, [isLoading, selectedDate]);
 
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <Title>통계</Title>
       <FlexBox>
         <DateCarousel selectedDate={selectedDate} onClick={onClickDateCarousel} />

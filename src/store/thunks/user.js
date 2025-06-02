@@ -6,7 +6,7 @@ const prefix = "/users";
 export const fetchMyInfo = createAsyncThunk("fetchMyInfo", async () => {
   const {
     data: { result },
-  } = await axiosInstance.get(`${prefix}/me`);
+  } = await axiosInstance.get(`${prefix}/info`);
   return result;
 });
 

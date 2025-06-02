@@ -11,9 +11,12 @@ import { fetchAllRoutinesByCategory } from "../apis/RoutineApi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyRoutines } from "../store/thunks/user";
 import { selectMyRoutines } from "../store/slices/user";
+import useLoginLoading from "../hooks/useLoginLoading";
 
 const HomePage = () => {
   const dispatch = useDispatch();
+
+  const { isLoading } = useLoginLoading();
 
   const [category, setCategory] = useState(Constants.routineCategory[0].title);
   const onClickCategory = useCallback(
@@ -27,17 +30,21 @@ const HomePage = () => {
   const [allRoutinesByCategory, setAllRoutinesByCategory] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchMyRoutines());
-  }, [dispatch]);
+    if (!isLoading) {
+      dispatch(fetchMyRoutines());
+    }
+  }, [isLoading, dispatch]);
 
   useEffect(() => {
-    fetchAllRoutinesByCategory(category).then((data) => {
-      setAllRoutinesByCategory(data);
-    });
-  }, [category, myRoutine]);
+    if (!isLoading) {
+      fetchAllRoutinesByCategory(category).then((data) => {
+        setAllRoutinesByCategory(data);
+      });
+    }
+  }, [category, myRoutine, isLoading]);
 
   return (
-    <MainLayout>
+    <MainLayout isLoading={isLoading}>
       <div>
         <Title>오늘의 루틴</Title>
         <RoutineBox>

@@ -37,12 +37,11 @@ export async function signup(params) {
   }
 }
 
-// TODO 내 정보 API 완성 후 수정
-export async function getMyInfo() {
+export async function fetchMyInfo() {
   try {
     const {
       data: { result },
-    } = await axiosInstance.get(`${prefix}/me`);
+    } = await axiosInstance.get(`${prefix}/info`);
     return result;
   } catch (error) {
     console.error(error);

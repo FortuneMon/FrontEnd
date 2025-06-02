@@ -9,7 +9,7 @@ import {
 } from "../thunks/user";
 
 /**
- * me: {nickname, partner}
+ * me: {nickName, pokemonId, pokemonName, url}
  */
 const initialState = {
   me: null,
@@ -26,6 +26,7 @@ const userSlice = createSlice({
     logout: (state) => {
       state.me = null;
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       delete _axios.defaults.headers.common.Authorization;
     },
   },
@@ -34,6 +35,9 @@ const userSlice = createSlice({
       state.me = action.payload;
     });
     builder.addCase(fetchMyInfo.rejected, (state, action) => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      delete _axios.defaults.headers.common.Authorization;
       state.me = null;
     });
     builder.addCase(fetchMyRoutines.fulfilled, (state, action) => {
