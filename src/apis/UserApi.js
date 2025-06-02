@@ -4,7 +4,7 @@ const prefix = "users";
 
 /**
  * @param {{loginId: string; password: string}} params
- * @returns {{accessToken: string;}}
+ * @returns {Promise<{accessToken: string; refreshToken: string}>}
  */
 export async function login(params) {
   try {
@@ -14,7 +14,6 @@ export async function login(params) {
     const accessToken = result.accessToken;
     const refreshToken = result.refreshToken;
     localStorage.setItem("accessToken", accessToken);
-    // refresh 저장
     localStorage.setItem("refreshToken", refreshToken);
     axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     return { accessToken, refreshToken };
@@ -37,6 +36,10 @@ export async function signup(params) {
   }
 }
 
+/**
+ * @return {Promise<{nickName: string; pokemonId: number | null; pokemonName: string | null; url: string | null}>}
+ *
+ */
 export async function fetchMyInfo() {
   try {
     const {
@@ -49,20 +52,32 @@ export async function fetchMyInfo() {
   }
 }
 
-// TODO 중복체크 API 완성 후 수정
-export async function checkId(params) {
+/**
+ * @param {string} loginId
+ * @returns {Promise<{message: string; _confirmed: boolean}>}
+ */
+export async function checkId(loginId) {
   try {
-    const { data } = await axiosInstance.post(`${prefix}/id`, params);
-    console.log("data", data);
+    const {
+      data: { result },
+    } = await axiosInstance.get(`${prefix}/check-login-id?loginId=${loginId}`);
+    return result;
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
-export async function checkNickname(params) {
+
+/**
+ * @param {string} nickname
+ * @returns {Promise<{message: string; _confirmed: boolean}>}
+ */
+export async function checkNickname(nickname) {
   try {
-    const { data } = await axiosInstance.post(`${prefix}/nickname`, params);
-    console.log("data", data);
+    const {
+      data: { result },
+    } = await axiosInstance.get(`${prefix}/check-nickname?nickname=${nickname}`);
+    return result;
   } catch (error) {
     console.error(error);
     throw error;
