@@ -2,13 +2,13 @@ import styled from "styled-components";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import DateCarousel from "../components/charts/DateCarousel";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AppColor from "../utils/AppColor";
 import Calendar from "../components/charts/Calendar";
+import { fetchMyStatistics } from "../apis/RoutineApi";
+import { getRandomItems } from "../utils/AppUtils";
 
 const ChartPage = () => {
-  const dummyData = {};
-
   const [selectedDate, setSelectedDate] = useState({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
@@ -35,15 +35,34 @@ const ChartPage = () => {
     [selectedDate]
   );
 
+  const [statistics, setStatistics] = useState([]);
+
+  const calendarThemeColorList = useMemo(() => {
+    return getRandomItems(AppColor.chartCalendarThemeColors, statistics.length);
+  }, [statistics]);
+
+  useEffect(() => {
+    fetchMyStatistics(selectedDate.year, selectedDate.month).then((s) => {
+      setStatistics(s);
+    });
+  }, [selectedDate]);
+
   return (
     <MainLayout>
       <Title>통계</Title>
       <FlexBox>
         <DateCarousel selectedDate={selectedDate} onClick={onClickDateCarousel} />
         <GridBox>
-          <Calendar routineName={"물마시기"} year={selectedDate.year} month={selectedDate.month} data={[]} />
-          <Calendar routineName={"물마시기"} year={selectedDate.year} month={selectedDate.month} data={[]} />
-          <Calendar routineName={"물마시기"} year={selectedDate.year} month={selectedDate.month} data={[]} />
+          {statistics.map((s, i) => (
+            <Calendar
+              key={s.routineId}
+              routineName={s.routineName}
+              year={selectedDate.year}
+              month={selectedDate.month}
+              data={s.daysStatistics}
+              themeColor={calendarThemeColorList[i]}
+            />
+          ))}
         </GridBox>
       </FlexBox>
     </MainLayout>

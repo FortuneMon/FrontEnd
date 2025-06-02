@@ -5,25 +5,36 @@ import { getTotalDays, makeCalendarArray } from "../../utils/AppUtils";
 import Day from "./Day";
 
 const Calendar = (props) => {
-  const { routineName, year, month, data } = props;
+  const { routineName, year, month, data, themeColor } = props;
+
   const calendarArray = useMemo(() => {
-    console.log(makeCalendarArray(year, month));
-    return makeCalendarArray(year, month);
-  }, [year, month]);
+    return makeCalendarArray(year, month).map((d) => {
+      if (d === null) return null;
+      if (!data[d]) {
+        return { [d]: false };
+      }
+      return { [d]: data[d] };
+    });
+  }, [year, month, data]);
 
   const achivement = useMemo(() => {
     const totalDays = getTotalDays(year, month);
-    // TODO API 연동 후 구현
-    const count = 14;
-    return { percentage: (count / totalDays).toFixed(4) * 100, count };
-  }, [year, month, data]);
+    let count = 0;
+    for (let i = 0; i < calendarArray.length; i++) {
+      if (calendarArray[i] === null) continue;
+      if (Object.values(calendarArray[i])[0] === true) {
+        count++;
+      }
+    }
+    return { percentage: ((count / totalDays) * 100).toFixed(2), count };
+  }, [year, month, calendarArray]);
 
   return (
     <Conatiner>
       <RoutineName>{routineName}</RoutineName>
       <Box>
-        {calendarArray.map((d) => (
-          <Day date={d} color={"#ae0df0"} isDone={true} />
+        {calendarArray.map((d, i) => (
+          <Day key={d + i} date={d} color={themeColor} />
         ))}
       </Box>
       <Achivement>
