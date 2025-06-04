@@ -16,34 +16,35 @@ const FortunePage = () => {
 
   // 오늘의 운세 조회
   useEffect(() => {
-    const fetchFortune = async () => {
-      try {
-        const res = await getTodayFortune();
+    if (!isLoading) {
+      const fetchFortune = async () => {
+        try {
+          const res = await getTodayFortune();
 
-        if (Array.isArray(res) && res.length === 0) {
-          setFortune([]);
-        } else if (res) {
-          console.log("오늘의 운세:", res);
-          setFortune(res);
+          if (Array.isArray(res) && res.length === 0) {
+            setFortune([]);
+          } else if (res) {
+            console.log("오늘의 운세:", res);
+            setFortune(res);
 
-          // 카테고리별 운세 추출
-          const loveFortune = res.find((f) => f.category === "love");
-          const healthFortune = res.find((f) => f.category === "health");
-          const wealthFortune = res.find((f) => f.category === "wealth");
+            // 카테고리별 운세 추출
+            const loveFortune = res.find((f) => f.category === "love");
+            const healthFortune = res.find((f) => f.category === "health");
+            const wealthFortune = res.find((f) => f.category === "wealth");
 
-          setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
-          setHealth(healthFortune?.content || "건강 카테고리 루틴을 추가해주세요");
-          setWealth(wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요");
+            setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
+            setHealth(healthFortune?.content || "건강 카테고리 루틴을 추가해주세요");
+            setWealth(wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요");
+          }
+        } catch (error) {
+          console.error("운세 불러오기 실패:", error);
+          setLove("애정운 불러오기 실패");
+          setHealth("건강운 불러오기 실패");
+          setWealth("재물운 불러오기 실패");
         }
-      } catch (error) {
-        console.error("운세 불러오기 실패:", error);
-        setLove("애정운 불러오기 실패");
-        setHealth("건강운 불러오기 실패");
-        setWealth("재물운 불러오기 실패");
-      }
-    };
-
-    fetchFortune();
+      };
+      fetchFortune();
+    }
   }, [isLoading]);
 
   const handleDrawFortune = async () => {
