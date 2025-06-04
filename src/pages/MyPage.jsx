@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useLoginLoading from "../hooks/useLoginLoading";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectMyInfo } from "../store/slices/user";
+import Loading from "../components/common/Loading";
 
 const MyPage = () => {
   const { isLoading } = useLoginLoading();
@@ -19,36 +20,32 @@ const MyPage = () => {
     dispatch(logout());
   }, [dispatch]);
 
+  if (isLoading) return <Loading />;
+
   return (
     <MainLayout isLoading={isLoading}>
       <Title>내 정보</Title>
       <FlexBox>
-        {user ? (
-          <UserBoxLogin>
-            <UserBox>
-              <img src={user.profileImage || "img/UserImg.png"} alt="user" />
-              <NameBox>
-                <UserName>{user.nickName}</UserName>
-                <PokeName>
-                  <img src="img/Partner.png" alt="partner" />
-                  &nbsp;{user.partnerPokemon || "파트너 포켓몬"}
-                </PokeName>
-              </NameBox>
-              {user.url && user.pokemonId ? (
-                <img src={user.url} alt="logo" />
-              ) : (
-                <NoParterPokemon>
-                  파트너 포켓몬을<br></br>설정해주세요
-                </NoParterPokemon>
-              )}
-            </UserBox>
-            <ButtonLogin onClick={handleLogout}>로그아웃</ButtonLogin>
-          </UserBoxLogin>
-        ) : (
-          <UserBoxLogout>
-            <ButtonLogout onClick={() => navigate("/login")}>로그인</ButtonLogout>
-          </UserBoxLogout>
-        )}
+        <UserBoxLogin>
+          <UserBox>
+            <img src={user.profileImage || "img/UserImg.png"} alt="user" />
+            <NameBox>
+              <UserName>{user.nickName}</UserName>
+              <PokeName>
+                <img src="img/Partner.png" alt="partner" />
+                &nbsp;{user.partnerPokemon || "파트너 포켓몬"}
+              </PokeName>
+            </NameBox>
+            {user.url && user.pokemonId ? (
+              <img src={user.url} alt="logo" />
+            ) : (
+              <NoParterPokemon>
+                파트너 포켓몬을<br></br>설정해주세요
+              </NoParterPokemon>
+            )}
+          </UserBox>
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+        </UserBoxLogin>
 
         <ContentBox>
           <Content onClick={() => navigate("/pokeball")}>
@@ -85,25 +82,6 @@ const FlexBox = styled.div`
 `;
 
 const UserBoxLogin = styled.div`
-  width: 100%;
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  box-sizing: border-box;
-  background-color: #f4f4f4;
-  border-radius: 1rem;
-
-  box-shadow: rgb(0, 0, 0, 0.1) 3px 3px 6px 1px;
-
-  img {
-    width: 100px;
-  }
-`;
-
-const UserBoxLogout = styled.div`
   width: 100%;
   margin-top: 1.5rem;
   display: flex;
@@ -160,7 +138,7 @@ const NoParterPokemon = styled.div`
   fontstyle: italic;
 `;
 
-const ButtonLogin = styled.div`
+const LogoutButton = styled.div`
   width: 80%;
   height: 40px;
   display: flex;
@@ -175,23 +153,6 @@ const ButtonLogin = styled.div`
   color: #656565;
   cursor: pointer;
   margin-top: 20px;
-  text-align: center;
-`;
-
-const ButtonLogout = styled.div`
-  width: 80%;
-  height: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #656565;
-  cursor: pointer;
   text-align: center;
 `;
 
