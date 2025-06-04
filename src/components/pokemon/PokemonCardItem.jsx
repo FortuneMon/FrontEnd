@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 const PokemonCardItem = ({ pokemon, isSelected, onClick }) => {
   return (
-    <PokemonCard key={pokemon.id} onClick={onClick} owned={pokemon.owned}>
+    // $을 통해 스타일 전용 Props로 만들어 DOM에는 전달 안되도록 설정
+    <PokemonCard key={pokemon.id} onClick={onClick} $owned={pokemon.owned}>
       {pokemon.isPartner && (
         <PartnerIcon src="img/partner.png" alt="파트너 포켓몬" />
       )}
@@ -16,7 +17,11 @@ const PokemonCardItem = ({ pokemon, isSelected, onClick }) => {
           <div className="corner bottom-right selected" />
         </>
       )}
-      <PokeCardImg src={pokemon.url} alt={pokemon.name} owned={pokemon.owned} />
+      <PokeCardImg
+        src={pokemon.url}
+        alt={pokemon.name}
+        $owned={pokemon.owned}
+      />
     </PokemonCard>
   );
 };
@@ -38,8 +43,8 @@ const PokemonCard = styled.div`
   align-items: center;
   justify-content: center;
 
-  cursor: ${({ owned }) => (owned ? "pointer" : "not-allowed")};
-  pointer-events: ${({ owned }) => (owned ? "auto" : "none")};
+  cursor: ${({ $owned }) => ($owned ? "pointer" : "not-allowed")};
+  pointer-events: ${({ $owned }) => ($owned ? "auto" : "none")};
 
   transition: all 0.2s ease;
 
@@ -125,9 +130,9 @@ const PokeCardImg = styled.img`
   height: 60px;
   border-radius: 0.5rem;
 
-  filter: ${({ owned }) => (owned ? "none" : "grayscale(100%)")};
-  opacity: ${({ owned }) => (owned ? 1 : 0.5)};
-  background-color: ${({ owned }) => (owned ? "transparent" : "black")};
+  filter: ${({ $owned }) => ($owned ? "none" : "grayscale(100%)")};
+  opacity: ${({ $owned }) => ($owned ? 1 : 0.5)};
+  background-color: ${({ $owned }) => ($owned ? "transparent" : "black")};
 `;
 
 const PartnerIcon = styled.img`
