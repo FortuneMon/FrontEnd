@@ -10,7 +10,6 @@ import axios from "axios";
 export const getTodayFortune = async () => {
   try {
     const { data } = await axiosInstance.get("/users/fortune"); // 엔드포인트 확인 필요
-    console.log("오늘의 운세:", data);
     return data.result;
   } catch (error) {
     console.error("운세 조회 실패:", error);
