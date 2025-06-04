@@ -56,11 +56,10 @@ const userSlice = createSlice({
     });
     builder.addCase(patchMyRoutineStatus.fulfilled, (state, action) => {
       const routineId = action.meta.arg;
-      const targetRoutine = state.myRoutines.find((r) => r.routineId === routineId);
-      state.myRoutines = [
-        ...state.myRoutines,
-        { ...targetRoutine, isCompeleted: action.payload.isCompeleted },
-      ];
+      const result = action.payload;
+      state.myRoutines = state.myRoutines.map((r) =>
+        r.routineId === routineId ? { ...r, isCompleted: result.isCompleted } : r
+      );
       console.log("patchMyRoutineStatus Result:", state.myRoutines);
     });
   },
