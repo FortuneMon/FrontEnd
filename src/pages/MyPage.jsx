@@ -20,7 +20,7 @@ const MyPage = () => {
     dispatch(logout());
   }, [dispatch]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading || user === null) return <Loading />;
 
   return (
     <MainLayout isLoading={isLoading}>

@@ -1,146 +1,102 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import TopNav from "../components/layouts/TopNav";
-import Nav from "../components/layouts/Nav";
-import axios from "axios";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
-import Main from "../components/layouts/Main";
 import useLoginLoading from "../hooks/useLoginLoading";
 import { drawTodayFortune, getTodayFortune } from "../apis/FortuneApi";
 import FortuneCardItem from "../components/fortune/FortuneCardItem";
+import Constants from "../utils/constants";
+import { toast } from "react-toastify";
 
 const FortunePage = () => {
   const { isLoading } = useLoginLoading();
 
-  const [fortune, setFortune] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [love, setLove] = useState("");
-  const [health, setHealth] = useState("");
-  const [wealth, setWealth] = useState("");
+  const [drawLoading, setDrawLoading] = useState(false);
 
-  // const [love, health, wealth] = useState({});
+  const [fortune, setFortune] = useState(null);
+  const getFortuneContentByCategory = useCallback(
+    (category) => {
+      if (fortune === null) return "";
+      const target = fortune.find((f) => f.category === category);
+      return target?.content
+        ? target.content
+        : // : `${category} 관련 루틴을 추가하시면, 내용을 확인하실 수 있어요.`;
+          "";
+    },
+    [fortune]
+  );
 
   // 오늘의 운세 조회
   useEffect(() => {
-    const fetchFortune = async () => {
-      try {
-        const res = await getTodayFortune();
-
-        if (Array.isArray(res) && res.length === 0) {
-          setFortune([]);
-        } else if (res) {
-          console.log("오늘의 운세:", res);
-          setFortune(res);
-
-          // 카테고리별 운세 추출
-          const loveFortune = res.find((f) => f.category === "love");
-          const healthFortune = res.find((f) => f.category === "health");
-          const wealthFortune = res.find((f) => f.category === "wealth");
-
-          setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
-          setHealth(
-            healthFortune?.content || "건강 카테고리 루틴을 추가해주세요"
-          );
-          setWealth(
-            wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요"
-          );
+    if (!isLoading) {
+      const fetchFortune = async () => {
+        try {
+          const res = await getTodayFortune();
+          if (Array.isArray(res) && res.length === 0) {
+            setFortune(null);
+          } else if (res) {
+            setFortune(res);
+          }
+        } catch (error) {
+          console.error("운세 불러오기 실패:", error);
+          toast.error("오늘의 운세를 불러오는데 실패했습니다. 다시 시도해 주세요.");
+          setFortune(null);
         }
-      } catch (error) {
-        console.error("운세 불러오기 실패:", error);
-        setLove("애정운 불러오기 실패");
-        setHealth("건강운 불러오기 실패");
-        setWealth("재물운 불러오기 실패");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFortune();
+      };
+      fetchFortune();
+    }
   }, [isLoading]);
 
-  const handleDrawFortune = async () => {
+  const handleDrawFortune = useCallback(async () => {
     try {
-      const res = await drawTodayFortune("love", "health", "wealth");
-      if (res?.fortune) {
-        const drawn = res.fortune;
-        setFortune(drawn);
-
-        const loveFortune = drawn.find((f) => f.category === "love");
-        const healthFortune = drawn.find((f) => f.category === "health");
-        const wealthFortune = drawn.find((f) => f.category === "wealth");
-
-        setLove(loveFortune?.content || "관계 카테고리 루틴을 추가해주세요");
-        setHealth(
-          healthFortune?.content || "건강 카테고리 루틴을 추가해주세요"
-        );
-        setWealth(
-          wealthFortune?.content || "자기계발 카테고리 루틴을 추가해주세요"
-        );
+      setDrawLoading(true);
+      const res = await drawTodayFortune();
+      if (res) {
+        setFortune(res);
       }
-
       // 버튼 누르면 버튼이 비활성화 되게.
-      window.location.reload(); // 운세 뽑기 후 페이지 새로고침
     } catch (error) {
+      toast.error("운세를 뽑는데 실패했습니다. 잠시 후 다시 시도해 주세요.");
       console.error("운세 뽑기 실패:", error);
-      setLove("애정운 fallback");
-      setHealth("건강운 fallback");
-      setWealth("재물운 fallback");
+    } finally {
+      setDrawLoading(false);
     }
-  };
+  }, []);
 
   return (
     <MainLayout isLoading={isLoading}>
       <Title>오늘의 운세 뽑기</Title>
       <FlexBox>
         <ContentBox>
-          {/* {!fortune.length ? (
-            <ImgBox>
-              <img src="img/Fortune.png" alt="포츈기계" />
-            </ImgBox>
-          ) : null}
-
-          {!loading && !fortune.length ? (
-            <FortuneBtn onClick={handleDrawFortune}>
-              오늘의 운세를 뽑아주세요
-            </FortuneBtn>
-          ) : (
-            <FortuneBox>
-              <FortuneCard>
-                <FortuneCategoryTitle>💘 애정운</FortuneCategoryTitle>
-                <FortuneText>{love}</FortuneText>
-              </FortuneCard>
-              <div>
-                <FortuneCategoryTitle>💪 건강운</FortuneCategoryTitle>
-                <FortuneText>{health}</FortuneText>
-              </div>
-              <div>
-                <FortuneCategoryTitle>💰 재물운</FortuneCategoryTitle>
-                <FortuneText>{wealth}</FortuneText>
-              </div>
-            </FortuneBox>
-          )} */}
-
-          {loading ? null : !fortune.length ? (
+          {fortune === null ? (
             <>
               <ImgBox>
                 <img src="img/Fortune.png" alt="포츈기계" />
               </ImgBox>
-              <FortuneBtn onClick={handleDrawFortune}>
+              <FortuneBtn disabled={drawLoading} onClick={handleDrawFortune}>
                 오늘의 운세를 뽑아주세요
               </FortuneBtn>
             </>
           ) : (
             <FortuneBox>
-              {/* constant의 title을 추가 수정 */}
-              <FortuneCardItem icon="💘" title="애정운" content={love} />
-              <FortuneCardItem icon="💪" title="건강운" content={health} />
-              <FortuneCardItem icon="💰" title="재물운" content={wealth} />
+              {Constants.routineCategory.map((rc) => (
+                <FortuneCardItem
+                  key={rc.title}
+                  icon={rc.icon}
+                  title={rc.title}
+                  content={getFortuneContentByCategory(rc.title)}
+                />
+              ))}
+              {fortune !== null && fortune.length < Constants.routineCategory.length ? (
+                <>
+                  <Text style={{ marginTop: "50px" }}>다른 카테고리의 루틴을 추가하면,</Text>
+                  <Text>다른 카테고리의 운세도 함께 확인할 수 있어요!</Text>
+                </>
+              ) : null}
             </FortuneBox>
           )}
         </ContentBox>
       </FlexBox>
-      <Nav />
     </MainLayout>
   );
 };
@@ -152,8 +108,6 @@ const FlexBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // height: 100%;
-  // max-height: calc(100% - 100px);
   width: 100%;
 `;
 
@@ -189,6 +143,11 @@ const FortuneBtn = styled.button`
   color: white;
   cursor: pointer;
   margin-top: 20px;
+
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.26);
+  }
 `;
 
 const FortuneBox = styled.div`
@@ -196,4 +155,8 @@ const FortuneBox = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+`;
+
+const Text = styled.p`
+  margin: 5px 0;
 `;
