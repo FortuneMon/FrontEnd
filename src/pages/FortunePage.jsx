@@ -16,7 +16,10 @@ const FortunePage = () => {
     (category) => {
       if (fortune === null) return "";
       const target = fortune.find((f) => f.category === category);
-      return target?.content ? target.content : `${category} 관련 루틴을 추가해 주세요.`;
+      return target?.content
+        ? target.content
+        : // : `${category} 관련 루틴을 추가하시면, 내용을 확인하실 수 있어요.`;
+          "";
     },
     [fortune]
   );
@@ -77,6 +80,12 @@ const FortunePage = () => {
                   content={getFortuneContentByCategory(rc.title)}
                 />
               ))}
+              {fortune !== null && fortune.length < Constants.routineCategory.length ? (
+                <>
+                  <Text style={{ marginTop: "50px" }}>다른 카테고리의 루틴을 추가하면,</Text>
+                  <Text>다른 카테고리의 운세도 함께 확인할 수 있어요!</Text>
+                </>
+              ) : null}
             </FortuneBox>
           )}
         </ContentBox>
@@ -134,4 +143,8 @@ const FortuneBox = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+`;
+
+const Text = styled.p`
+  margin: 5px 0;
 `;

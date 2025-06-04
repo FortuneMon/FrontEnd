@@ -1,8 +1,7 @@
-// components/fortune/FortuneCardItem.jsx
-import React from "react";
 import styled from "styled-components";
 
 const FortuneCardItem = ({ icon, title, content }) => {
+  if (!content) return null;
   return (
     <FortuneCard>
       <FortuneCategoryTitle>
