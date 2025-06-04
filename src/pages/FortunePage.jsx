@@ -49,7 +49,6 @@ const FortunePage = () => {
         setFortune(res);
       }
       // 버튼 누르면 버튼이 비활성화 되게.
-      window.location.reload(); // 운세 뽑기 후 페이지 새로고침
     } catch (error) {
       toast.error("운세를 뽑는데 실패했습니다. 잠시 후 다시 시도해 주세요.");
       console.error("운세 뽑기 실패:", error);
