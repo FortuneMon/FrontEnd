@@ -1,44 +1,23 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
-import TopNav from "../components/layouts/TopNav";
-import Nav from "../components/layouts/Nav";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import { useNavigate } from "react-router-dom";
-import { fetchMyInfo } from "../apis/UserApi";
 import useLoginLoading from "../hooks/useLoginLoading";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectMyInfo } from "../store/slices/user";
 
 const MyPage = () => {
   const { isLoading } = useLoginLoading();
+  const dispatch = useDispatch();
 
-  const [user, setUser] = useState(null); // 사용자 정보 저장
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  const user = useSelector(selectMyInfo);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const result = await fetchMyInfo();
-        setUser(result);
-      } catch (error) {
-        console.error("내 정보 불러오기 실패", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUser();
-  }, [isLoading]);
-
-  const handleLogout = () => {
-    // 로그아웃 API 호출 + 상태 초기화
-    // axios.post("/api/logout").then(() => {
-    //   setUser(null);
-    // });
-  };
-
-  if (loading) return <div>로딩 중...</div>;
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+  }, [dispatch]);
 
   return (
     <MainLayout isLoading={isLoading}>
@@ -67,9 +46,7 @@ const MyPage = () => {
           </UserBoxLogin>
         ) : (
           <UserBoxLogout>
-            <ButtonLogout onClick={() => navigate("/login")}>
-              로그인
-            </ButtonLogout>
+            <ButtonLogout onClick={() => navigate("/login")}>로그인</ButtonLogout>
           </UserBoxLogout>
         )}
 
