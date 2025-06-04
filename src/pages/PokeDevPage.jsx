@@ -4,6 +4,7 @@ import Title from "../components/layouts/Title";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { fetchMyPokemons, setPartnerPokemon } from "../apis/PokeApi";
+import PokemonCardItem from "../components/pokemon/PokemonCardItem";
 
 const myPokemonListDemo = [
   {
@@ -157,31 +158,14 @@ const PokeDevPage = () => {
       {/* 도감 영역 */}
       <DexBackground>
         <PokemonGrid>
-          {myPokemonList.map((pokemon) => {
-            const isSelected = selectedPokemon?.id === pokemon.id;
-
-            return (
-              <PokemonCard
-                key={pokemon.id}
-                onClick={() => setSelectedPokemon(pokemon)}
-                owned={pokemon.owned}
-              >
-                {isSelected && (
-                  <>
-                    <div className="corner top-left selected" />
-                    <div className="corner top-right selected" />
-                    <div className="corner bottom-left selected" />
-                    <div className="corner bottom-right selected" />
-                  </>
-                )}
-                <PokeCardImg
-                  src={pokemon.url}
-                  alt={pokemon.name}
-                  owned={pokemon.owned}
-                />
-              </PokemonCard>
-            );
-          })}
+          {myPokemonList.map((pokemon) => (
+            <PokemonCardItem
+              key={pokemon.id}
+              pokemon={pokemon}
+              isSelected={selectedPokemon?.id === pokemon.id}
+              onClick={() => setSelectedPokemon(pokemon)}
+            />
+          ))}
         </PokemonGrid>
       </DexBackground>
     </MainLayout>
@@ -315,6 +299,7 @@ const PokemonGrid = styled.div`
 `;
 
 const PokemonCard = styled.div`
+  position: relative;
   background-color: rgba(255, 255, 255, 0.1);
   width: 70px;
   height: 70px;
@@ -418,4 +403,13 @@ const PokeCardImg = styled.img`
   filter: ${({ owned }) => (owned ? "none" : "grayscale(100%)")};
   opacity: ${({ owned }) => (owned ? 1 : 0.5)};
   background-color: ${({ owned }) => (owned ? "transparent" : "black")};
+`;
+
+const PartnerIcon = styled.img`
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  z-index: 2;
 `;
