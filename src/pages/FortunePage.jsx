@@ -65,7 +65,7 @@ const FortunePage = () => {
     };
 
     fetchFortune();
-  }, [isLoading]);
+  }, [isLoading, fortune]);
 
   const handleDrawFortune = async () => {
     try {
@@ -166,7 +166,7 @@ const FlexBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  // height: 100%;
   // max-height: calc(100% - 100px);
   width: 100%;
 `;
