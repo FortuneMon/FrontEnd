@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 const FortunePage = () => {
   const { isLoading } = useLoginLoading();
 
+  const [drawLoading, setDrawLoading] = useState(false);
+
   const [fortune, setFortune] = useState(null);
   const getFortuneContentByCategory = useCallback(
     (category) => {
@@ -47,6 +49,7 @@ const FortunePage = () => {
 
   const handleDrawFortune = useCallback(async () => {
     try {
+      setDrawLoading(true);
       const res = await drawTodayFortune();
       if (res) {
         setFortune(res);
@@ -55,6 +58,8 @@ const FortunePage = () => {
     } catch (error) {
       toast.error("운세를 뽑는데 실패했습니다. 잠시 후 다시 시도해 주세요.");
       console.error("운세 뽑기 실패:", error);
+    } finally {
+      setDrawLoading(false);
     }
   }, []);
 
@@ -68,7 +73,9 @@ const FortunePage = () => {
               <ImgBox>
                 <img src="img/Fortune.png" alt="포츈기계" />
               </ImgBox>
-              <FortuneBtn onClick={handleDrawFortune}>오늘의 운세를 뽑아주세요</FortuneBtn>
+              <FortuneBtn disabled={drawLoading} onClick={handleDrawFortune}>
+                오늘의 운세를 뽑아주세요
+              </FortuneBtn>
             </>
           ) : (
             <FortuneBox>
@@ -136,6 +143,11 @@ const FortuneBtn = styled.button`
   color: white;
   cursor: pointer;
   margin-top: 20px;
+
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.26);
+  }
 `;
 
 const FortuneBox = styled.div`
