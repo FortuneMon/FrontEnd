@@ -1,13 +1,20 @@
 import styled, { keyframes } from "styled-components";
 import AppColor from "../../utils/AppColor";
+import { useMemo } from "react";
 
-const LoadingSpinner = () => (
-  <SpinnerWrapper>
-    <div>
-      <Spinner />
-    </div>
-  </SpinnerWrapper>
-);
+const LoadingSpinner = (props) => {
+  const { size, style } = props;
+
+  const _size = useMemo(() => (size ? { width: size, height: size } : {}), [size]);
+
+  return (
+    <SpinnerWrapper style={{ ..._size, ...style }}>
+      <div>
+        <Spinner style={_size} />
+      </div>
+    </SpinnerWrapper>
+  );
+};
 
 export default LoadingSpinner;
 

@@ -7,6 +7,7 @@ import { drawTodayFortune, getTodayFortune } from "../apis/FortuneApi";
 import FortuneCardItem from "../components/fortune/FortuneCardItem";
 import Constants from "../utils/constants";
 import { toast } from "react-toastify";
+import Loading from "../components/common/Loading";
 
 const FortunePage = () => {
   const { isLoading } = useLoginLoading();
@@ -54,7 +55,6 @@ const FortunePage = () => {
       if (res) {
         setFortune(res);
       }
-      // 버튼 누르면 버튼이 비활성화 되게.
     } catch (error) {
       toast.error("운세를 뽑는데 실패했습니다. 잠시 후 다시 시도해 주세요.");
       console.error("운세 뽑기 실패:", error);
@@ -68,13 +68,14 @@ const FortunePage = () => {
       <Title>오늘의 운세 뽑기</Title>
       <FlexBox>
         <ContentBox>
-          {fortune === null ? (
+          {fortune !== null ? (
             <>
               <ImgBox>
                 <img src="img/Fortune.png" alt="포츈기계" />
               </ImgBox>
               <FortuneBtn disabled={drawLoading} onClick={handleDrawFortune}>
-                오늘의 운세를 뽑아주세요
+                {drawLoading && <Loading size="12px" style={{ position: "absolute", left: "30px" }} />}
+                {!drawLoading ? "오늘의 운세를 뽑아주세요" : "운세를 뽑고 있습니다..."}
               </FortuneBtn>
             </>
           ) : (
@@ -132,6 +133,11 @@ const ImgBox = styled.div`
 `;
 
 const FortuneBtn = styled.button`
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   width: 80%;
   max-width: 400px;
   height: 50px;
