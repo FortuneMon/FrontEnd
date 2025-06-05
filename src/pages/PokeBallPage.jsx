@@ -237,8 +237,9 @@ const PokeBallPage = () => {
       <PokemonGrid>
         {pokeBalls.map((ball) => (
           <BallCard
-            key={ball.ballName}
-            isUsed={ball.open}
+            // key={ball.ballName}
+            key={ball.ballId}
+            $isUsed={ball.open}
             onClick={() => openDrawModal(ball)}
           >
             <BallImgWrapper>
@@ -248,7 +249,7 @@ const PokeBallPage = () => {
               <div className="corner bottom-right" />
               <BallImg
                 src={ballImages[ball.ballId]}
-                isUsed={ball.open}
+                $isUsed={ball.open}
                 alt={`ball-${ball.ballId}`}
               />
             </BallImgWrapper>
@@ -341,8 +342,8 @@ const BallCard = styled.div`
   flex-direction: column;
   align-items: center;
 
-  filter: ${(props) => (props.isUsed ? "grayscale(100%)" : "none")};
-  pointer-events: ${(props) => (props.isUsed ? "none" : "auto")};
+  filter: ${(props) => (props.$isUsed ? "grayscale(100%)" : "none")};
+  pointer-events: ${(props) => (props.$isUsed ? "none" : "auto")};
 `;
 
 const BallImgWrapper = styled.div`
@@ -453,8 +454,8 @@ const BallImg = styled.img`
   width: 100%;
   height: 100%;
 
-  filter: ${(props) => (props.isUsed ? "grayscale(100%)" : "none")};
-  pointer-events: ${(props) => (props.isUsed ? "none" : "auto")};
+  filter: ${(props) => (props.$isUsed ? "grayscale(100%)" : "none")};
+  pointer-events: ${(props) => (props.$isUsed ? "none" : "auto")};
 `;
 
 const BallImgAnimated = styled.img`
