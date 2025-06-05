@@ -9,6 +9,10 @@ const constants = Object.freeze({
       title: "관계",
     },
     {
+      icon: "💰💵",
+      title: "재물",
+    },
+    {
       icon: "🧘‍♂️📈",
       title: "자기계발",
     },
