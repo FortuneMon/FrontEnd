@@ -73,6 +73,10 @@ const userSlice = createSlice({
 export const selectMyInfo = (state) => state.user?.me;
 export const selectMyRoutines = (state) => state.user?.myRoutines;
 export const selectIsLoggedIn = (state) => (state.user?.me ? true : false);
+export const selectMyPartnerPokemon = (state) =>
+  state.user?.me?.pokemonId
+    ? { id: state.user?.me.pokemonId, name: state.user?.me.pokemonName, url: state.user?.me.url }
+    : null;
 
 const { actions, reducer } = userSlice;
 

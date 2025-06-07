@@ -1,14 +1,10 @@
-// components/pokemon/PokemonCardItem.jsx
-import React from "react";
 import styled from "styled-components";
 
 const PokemonCardItem = ({ pokemon, isSelected, onClick }) => {
   return (
     // $을 통해 스타일 전용 Props로 만들어 DOM에는 전달 안되도록 설정
     <PokemonCard key={pokemon.id} onClick={onClick} $owned={pokemon.owned}>
-      {pokemon.isPartner && (
-        <PartnerIcon src="img/partner.png" alt="파트너 포켓몬" />
-      )}
+      {pokemon.isPartner && <PartnerIcon src="img/partner.png" alt="파트너 포켓몬" />}
       {isSelected && (
         <>
           <div className="corner top-left selected" />
@@ -17,11 +13,7 @@ const PokemonCardItem = ({ pokemon, isSelected, onClick }) => {
           <div className="corner bottom-right selected" />
         </>
       )}
-      <PokeCardImg
-        src={pokemon.url}
-        alt={pokemon.name}
-        $owned={pokemon.owned}
-      />
+      <PokeCardImg src={pokemon.url} alt={pokemon.name} $owned={pokemon.owned} />
     </PokemonCard>
   );
 };
@@ -137,8 +129,8 @@ const PokeCardImg = styled.img`
 
 const PartnerIcon = styled.img`
   position: absolute;
-  top: 8px;
-  left: 8px;
+  bottom: 4px;
+  right: 4px;
   width: 24px;
   height: 24px;
   z-index: 2;
