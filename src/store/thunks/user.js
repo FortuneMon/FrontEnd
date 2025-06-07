@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../utils/_axios";
+import { setPartnerPokemon as _setPartnerPokemon } from "../../apis/PokeApi";
 
 const prefix = "/users";
 
@@ -19,10 +20,6 @@ export const fetchMyRoutines = createAsyncThunk("fetchMyRoutines", async () => {
   return routines;
 });
 
-/**
- * @param {id: number} routineId
- * @returns
- */
 export const addMyRoutine = createAsyncThunk("addMyRoutine", async (routineId) => {
   const {
     data: { result },
@@ -30,10 +27,6 @@ export const addMyRoutine = createAsyncThunk("addMyRoutine", async (routineId) =
   return result;
 });
 
-/**
- * @param {id: number} routineId
- * @returns
- */
 export const deleteMyRoutine = createAsyncThunk("deleteMyRoutine", async (routineId) => {
   const {
     data: { result },
@@ -41,13 +34,11 @@ export const deleteMyRoutine = createAsyncThunk("deleteMyRoutine", async (routin
   return result;
 });
 
-/**
- * @param {id: number} routineId
- * @returns
- */
 export const patchMyRoutineStatus = createAsyncThunk("patchMyRoutineStatus", async (routineId) => {
   const {
     data: { result },
   } = await axiosInstance.patch(`${prefix}/routines/${routineId}/status`);
   return result;
 });
+
+export const setPartnerPokemon = createAsyncThunk("setPartnerPokemon", _setPartnerPokemon);

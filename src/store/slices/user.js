@@ -6,6 +6,7 @@ import {
   addMyRoutine,
   deleteMyRoutine,
   patchMyRoutineStatus,
+  setPartnerPokemon,
 } from "../thunks/user";
 
 /**
@@ -61,6 +62,10 @@ const userSlice = createSlice({
         r.routineId === routineId ? { ...r, isCompleted: result.isCompleted } : r
       );
       console.log("patchMyRoutineStatus Result:", state.myRoutines);
+    });
+    builder.addCase(setPartnerPokemon.fulfilled, (state, action) => {
+      const { id, name, url } = action.payload;
+      state.me = { ...state.me, pokemonId: id, pokemonName: name, url };
     });
   },
 });
