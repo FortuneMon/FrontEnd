@@ -15,12 +15,16 @@ export const fetchMyPokemons = async () => {
 };
 
 // 파트너 포켓몬 설정
+/**
+ * @param {number} pokemonId
+ * @returns {Promise<{id: number, name: string, url: string; type: string[], groupName: string;}>}
+ */
 export const setPartnerPokemon = async (pokemonId) => {
   try {
-    const { data } = await axiosInstance.patch(
-      `/${prefix}/partners/${pokemonId}`
-    );
-    return data;
+    const {
+      data: { result },
+    } = await axiosInstance.patch(`${prefix}/partners/${pokemonId}`);
+    return result;
   } catch (error) {
     console.error("파트너 설정 실패:", error);
     throw error;
@@ -42,9 +46,7 @@ export const fetchMyPokeBalls = async () => {
 // 몬스터볼을 사용하여 뽑기
 export const openPokemonByBall = async (ballId) => {
   try {
-    const { data } = await axiosInstance.post(
-      `/${prefix}/balls/${ballId}/open`
-    );
+    const { data } = await axiosInstance.post(`/${prefix}/balls/${ballId}/open`);
     console.log("포켓몬 뽑기 결과:", data);
     return data;
   } catch (error) {

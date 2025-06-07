@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { fetchMyPokemons, setPartnerPokemon } from "../apis/PokeApi";
+import { fetchMyPokemons } from "../apis/PokeApi";
 import PokemonCardItem from "../components/pokemon/PokemonCardItem";
+import { useDispatch } from "react-redux";
+import { setPartnerPokemon } from "../store/thunks/user";
 
 const myPokemonListDemo = [
   {
@@ -79,6 +81,7 @@ const typeColors = {
 };
 
 const PokeDevPage = () => {
+  const dispatch = useDispatch();
   // 현재 선택된 포켓몬
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
@@ -102,7 +105,7 @@ const PokeDevPage = () => {
   }, []);
 
   // 파트너 포켓몬 등록
-  const handleSetPartner = async () => {
+  const handleSetPartner = () => {
     if (!selectedPokemon) {
       toast.error("먼저 포켓몬을 선택해주세요.");
       return;
@@ -114,7 +117,8 @@ const PokeDevPage = () => {
     }
 
     try {
-      await setPartnerPokemon(selectedPokemon.id);
+      dispatch(setPartnerPokemon(selectedPokemon.id));
+      toast.success(`"${selectedPokemon.name}"이(가) 파트너로 설정되었습니다.`);
     } catch (error) {
       toast.error("파트너 설정 중 오류가 발생했습니다.");
     }
@@ -133,11 +137,7 @@ const PokeDevPage = () => {
       <InfoBox $selectedPokemon={selectedPokemon}>
         {selectedPokemon ? (
           <>
-            <PokeImg
-              src={selectedPokemon.url}
-              alt={selectedPokemon.name}
-              owned={selectedPokemon.owned}
-            />
+            <PokeImg src={selectedPokemon.url} alt={selectedPokemon.name} owned={selectedPokemon.owned} />
             <PokeMonDetail>
               <PokeMonName>{selectedPokemon.name}</PokeMonName>
               <PokeMonGroup>{selectedPokemon.groupName}</PokeMonGroup>
