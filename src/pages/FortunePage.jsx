@@ -68,7 +68,7 @@ const FortunePage = () => {
       <Title>오늘의 운세 뽑기</Title>
       <FlexBox>
         <ContentBox>
-          {fortune !== null ? (
+          {fortune === null ? (
             <>
               <ImgBox>
                 <img src="img/Fortune.png" alt="포츈기계" />
