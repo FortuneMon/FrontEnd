@@ -103,6 +103,7 @@ const PokeDevPage = () => {
 
   // 파트너 포켓몬 등록
   const handleSetPartner = async () => {
+    console.log("파트너 설정 클릭됨", selectedPokemon);
     if (!selectedPokemon) {
       toast.error("먼저 포켓몬을 선택해주세요.");
       return;
@@ -136,7 +137,7 @@ const PokeDevPage = () => {
             <PokeImg
               src={selectedPokemon.url}
               alt={selectedPokemon.name}
-              owned={selectedPokemon.owned}
+              $owned={selectedPokemon.owned}
             />
             <PokeMonDetail>
               <PokeMonName>{selectedPokemon.name}</PokeMonName>
@@ -221,9 +222,9 @@ const PokeImg = styled.img`
   height: 100px;
   margin: 0 1rem;
 
-  filter: ${({ owned }) => (owned ? "none" : "grayscale(100%)")};
-  opacity: ${({ owned }) => (owned ? 1 : 0.2)};
-  background-color: ${({ owned }) => (owned ? "transparent" : "transparent")};
+  filter: ${({ $owned }) => ($owned ? "none" : "grayscale(100%)")};
+  opacity: ${({ $owned }) => ($owned ? 1 : 0.2)};
+  background-color: ${({ $owned }) => ($owned ? "transparent" : "transparent")};
 `;
 
 const PokeMonDetail = styled.div`

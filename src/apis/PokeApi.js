@@ -16,10 +16,12 @@ export const fetchMyPokemons = async () => {
 
 // 파트너 포켓몬 설정
 export const setPartnerPokemon = async (pokemonId) => {
+  console.log("파트너 설정 요청:", pokemonId);
   try {
     const { data } = await axiosInstance.patch(
       `/${prefix}/partners/${pokemonId}`
     );
+    console.log("포켓몬 목록:", data);
     return data;
   } catch (error) {
     console.error("파트너 설정 실패:", error);
