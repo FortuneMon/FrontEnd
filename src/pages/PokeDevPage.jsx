@@ -5,8 +5,9 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { fetchMyPokemons } from "../apis/PokeApi";
 import PokemonCardItem from "../components/pokemon/PokemonCardItem";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setPartnerPokemon } from "../store/thunks/user";
+import { selectMyPartnerPokemon } from "../store/slices/user";
 
 const myPokemonListDemo = [
   {
@@ -82,6 +83,8 @@ const typeColors = {
 
 const PokeDevPage = () => {
   const dispatch = useDispatch();
+
+  const partnerPokemon = useSelector(selectMyPartnerPokemon);
   // 현재 선택된 포켓몬
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
@@ -93,7 +96,9 @@ const PokeDevPage = () => {
     const loadPokemons = async () => {
       try {
         const data = await fetchMyPokemons();
-        setMyPokemonList(data);
+        setMyPokemonList(
+          data.map((pokemon) => ({ ...pokemon, isPartner: pokemon.id === partnerPokemon?.id }))
+        );
         console.log("내 포켓몬 목록:", data);
       } catch (error) {
         setMyPokemonList(myPokemonListDemo); // 임시 데이터로 대체
@@ -102,7 +107,7 @@ const PokeDevPage = () => {
     };
 
     loadPokemons();
-  }, []);
+  }, [partnerPokemon]);
 
   // 파트너 포켓몬 등록
   const handleSetPartner = () => {
