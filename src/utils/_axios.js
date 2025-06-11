@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://43.201.162.24:8080", //TODO 추후 .env 파일로 베이스 URL 받아오고 ""로 수정
+  baseURL: "",
   withCredentials: true,
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -12,18 +12,11 @@ const axiosInstance = axios.create({
       "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization",
   },
 });
-
-if (process.env.PUBLIC_BASE_URL) {
-  axiosInstance.defaults.baseURL = process.env.PUBLIC_BASE_URL;
+let baseURL = "";
+if (process.env.REACT_APP_SERVER_BASE_URL) {
+  baseURL = process.env.REACT_APP_SERVER_BASE_URL;
+  axiosInstance.defaults.baseURL = baseURL;
 }
-
-// 기존 코드
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     return Promise.reject((error.response && error.response.data) || "Something went wrong");
-//   }
-// );
 
 // 토큰 재발급이 추가된 코드
 let isRefreshing = false;
@@ -31,8 +24,7 @@ let failedQueue = [];
 
 const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
-    if (error)
-      prom.reject(error); // 실패한 경우: 기다리던 요청들도 전부 실패 처리
+    if (error) prom.reject(error); // 실패한 경우: 기다리던 요청들도 전부 실패 처리
     else prom.resolve(token); // 성공한 경우: 새 토큰을 전달해서 요청 재시도
   });
   failedQueue = [];
@@ -67,7 +59,7 @@ axiosInstance.interceptors.response.use(
         const {
           data: { accessToken: newAccessToken },
         } = await axios.post(
-          "http://43.201.162.24:8080/users/refresh",
+          `${baseURL}/users/refresh`,
           { refreshToken }, // 백엔드 요구에 따라 body or header
           {
             headers: {
@@ -98,9 +90,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(
-      (error.response && error.response.data) || "Something went wrong"
-    );
+    return Promise.reject((error.response && error.response.data) || "Something went wrong");
   }
 );
 
