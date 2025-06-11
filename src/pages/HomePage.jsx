@@ -1,54 +1,134 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import Nav from "../components/Nav";
-import TopNav from "../components/TopNav";
-import { useNavContext } from "../apis/NavContext";
+import Title from "../components/layouts/Title";
+import MainLayout from "../components/layouts/MainLayout";
+import MyRoutineCard from "../components/routines/MyRoutineCard";
+import RoutineCard from "../components/routines/RoutineCard";
+import AppColor from "../utils/AppColor";
+import Constants from "../utils/constants";
+import RoutineCategoryChip from "../components/routines/RoutineCategoryChip";
+import { fetchAllRoutinesByCategory } from "../apis/RoutineApi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyRoutines } from "../store/thunks/user";
+import { selectMyRoutines } from "../store/slices/user";
+import useLoginLoading from "../hooks/useLoginLoading";
 
-const Home = () => {
-  const { setActiveNav } = useNavContext();
+const HomePage = () => {
+  const dispatch = useDispatch();
+
+  const { isLoading } = useLoginLoading();
+
+  const [category, setCategory] = useState(Constants.routineCategory[0].title);
+  const onClickCategory = useCallback(
+    (title) => () => {
+      setCategory(title);
+    },
+    []
+  );
+
+  const myRoutine = useSelector(selectMyRoutines);
+  const [allRoutinesByCategory, setAllRoutinesByCategory] = useState([]);
 
   useEffect(() => {
-    setActiveNav(0);
-  }, []);
+    if (!isLoading) {
+      dispatch(fetchMyRoutines());
+    }
+  }, [isLoading, dispatch]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      fetchAllRoutinesByCategory(category).then((data) => {
+        setAllRoutinesByCategory(data);
+      });
+    }
+  }, [category, myRoutine, isLoading]);
 
   return (
-    <Container>
-      <TopNav></TopNav>
-      <Main></Main>
-      <Nav></Nav>
-    </Container>
+    <MainLayout isLoading={isLoading}>
+      <div>
+        <Title>오늘의 루틴</Title>
+        <RoutineBox>
+          {myRoutine.length > 0 ? (
+            myRoutine.map((data, i) => (
+              <MyRoutineCard
+                key={data.routineId}
+                routineId={data.routineId}
+                title={data.name}
+                isCompleted={data.isCompleted}
+                isLast={data.length === i + 1}
+              />
+            ))
+          ) : (
+            <NoRoutineWrapper>
+              <NoRoutineText>현재 진행 중인 루틴이 없습니다.</NoRoutineText>
+              <NoRoutineText>내 일상에 만들고 싶은 루틴을 추가해보세요!</NoRoutineText>
+            </NoRoutineWrapper>
+          )}
+        </RoutineBox>
+      </div>
+      <Line />
+
+      <div>
+        <Title>추천 루틴</Title>
+        <CategoryBox>
+          {Constants.routineCategory.map((c, i) => (
+            <RoutineCategoryChip
+              key={i}
+              icon={c.icon}
+              title={c.title}
+              isSelected={c.title === category}
+              onClick={onClickCategory(c.title)}
+            />
+          ))}
+        </CategoryBox>
+        <RoutineBox>
+          {allRoutinesByCategory.map((data, i) => (
+            <RoutineCard
+              key={data.id}
+              routineId={data.id}
+              title={data.name}
+              isRegistered={data.selected}
+              isLast={data.length === i + 1}
+            />
+          ))}
+        </RoutineBox>
+      </div>
+    </MainLayout>
   );
 };
 
-export default Home;
+export default HomePage;
 
-const Container = styled.div`
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  // position: relative;
+const RoutineBox = styled.div`
+  display: flex;
+  witdh: 80%;
+  flex-direction: column;
+  border: 1px solid ${AppColor.border.gray};
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 20px;
+  box-shadow: rgb(0, 0, 0, 0.1) 3px 4px 18px 1px;
 `;
 
-const Main = styled.div`
-  position: relative;
-  top: 50px;
-  background-color: #f5f5f5;
-  padding: 0.5rem;
-  overflow-y: auto;
-  height: 100%;
-  max-height: calc(100% - 100px);
-  box-sizing: border-box;
+const Line = styled.div`
+  border-bottom: 1px solid ${AppColor.border.gray};
+  margin: 50px auto;
+`;
 
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
+const CategoryBox = styled.div`
+  display: flex;
+  column-gap: 14px;
+  margin-top: 20px;
+`;
 
-  &::-webkit-scrollbar-thumb {
-    background: rgba(150, 150, 150);
-    border-radius: 10px;
-  }
+const NoRoutineWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+`;
 
-  &::-webkit-scrollbar-track {
-    background: rgba(150, 150, 150, 0.1);
-  }
+const NoRoutineText = styled.p`
+  margin: 8px 0;
 `;

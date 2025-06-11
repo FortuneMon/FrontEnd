@@ -1,18 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavContext } from "../apis/NavContext";
+import { useNavContext } from "../../apis/NavContext";
 
 const Nav = () => {
   // 사실상 setActiveNav 호출이 불필요 NavContext에서 url이 이동하면 자동으로 실행되기에
   const { activeNav, setActiveNav } = useNavContext(); // 상태 및 setter 가져오기
   const navigate = useNavigate();
-  const storedActiveNav = localStorage.getItem("activeNav");
 
   const handleNavClick = (index, path) => {
-    // setActiveNav(index);
     navigate(path);
-    console.log(activeNav);
   };
 
   return (
@@ -20,7 +17,7 @@ const Nav = () => {
       <IconList>
         <IconButton
           onClick={() => handleNavClick(0, "/")}
-          isActive={activeNav === 0}
+          $isactive={activeNav === 0}
         >
           <img
             src={activeNav === 0 ? "/icon/HomeBlack.png" : "/icon/HomeGray.png"}
@@ -30,17 +27,17 @@ const Nav = () => {
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(1, "/chart")}
-          isActive={activeNav === 1}
+          $isactive={activeNav === 1}
         >
           <img
             src={activeNav === 1 ? "/icon/ChartBlack.png" : "/icon/Chart.png"}
-            alt="Find"
+            alt="Chart"
           />
           <span>통계</span>
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(2, "/fortune")}
-          isActive={activeNav === 2}
+          $isactive={activeNav === 2}
         >
           <img
             src={
@@ -48,13 +45,13 @@ const Nav = () => {
                 ? "/icon/FortuneBlack.png"
                 : "/icon/FortuneGray.png"
             }
-            alt="Search"
+            alt="Fortune"
           />
           <span>운세</span>
         </IconButton>
         <IconButton
           onClick={() => handleNavClick(3, "/mypage")}
-          isActive={activeNav === 3}
+          $isactive={activeNav === 3}
         >
           <img
             src={activeNav === 3 ? "/icon/UserBlack.png" : "/icon/UserGray.png"}
@@ -88,7 +85,7 @@ const Container = styled.div`
     ); // 작은 화면에서는 화면 비율에 맞게 높이 설정 전체 높이의 8%
   }
 
-  z-index: 10000;
+  z-index: 100;
 `;
 
 const IconList = styled.ul`
@@ -101,8 +98,6 @@ const IconList = styled.ul`
   margin: 0;
   list-style: none;
 `;
-
-const IconBox = styled.div``;
 
 const IconButton = styled.button`
   // flex: 1;
@@ -119,7 +114,7 @@ const IconButton = styled.button`
 
   span {
     font-size: 0.6rem;
-     color: ${({ isActive }) => (isActive ? "black" : "#c9c9c9")};
+     color: ${({ $isactive }) => ($isactive ? "black" : "#c9c9c9")};
   }
   img {
     width: 1.2rem;
