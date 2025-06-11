@@ -10,9 +10,13 @@ import { toast } from "react-toastify";
 import Loading from "../components/common/Loading";
 import { useSelector } from "react-redux";
 import { selectMyPartnerPokemon } from "../store/slices/user";
+import CommonButton from "../components/common/CommonButton";
+import AppColor from "../utils/AppColor";
+import { useNavigate } from "react-router-dom";
 
 const FortunePage = () => {
   const { isLoading } = useLoginLoading();
+  const navigate = useNavigate();
 
   const partner = useSelector(selectMyPartnerPokemon);
 
@@ -133,6 +137,20 @@ const FortunePage = () => {
                   <Text>다른 카테고리의 운세도 함께 확인할 수 있어요!</Text>
                 </>
               ) : null}
+              <CommonButton
+                label="포켓몬 뽑으러 가기"
+                onClick={() => navigate("/pokeball")}
+                buttonStyle={{
+                  backgroundColor: AppColor.white,
+                  border: `1px solid ${AppColor.border.gray}`,
+                  color: AppColor.background.black,
+                  width: "100%",
+                  height: "48px",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  marginTop: "50px",
+                }}
+              />
             </FortuneBox>
           )}
         </ContentBox>
