@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
 import MainLayout from "../components/layouts/MainLayout";
 import Title from "../components/layouts/Title";
 import useLoginLoading from "../hooks/useLoginLoading";
@@ -8,9 +8,13 @@ import FortuneCardItem from "../components/fortune/FortuneCardItem";
 import Constants from "../utils/constants";
 import { toast } from "react-toastify";
 import Loading from "../components/common/Loading";
+import { useSelector } from "react-redux";
+import { selectMyPartnerPokemon } from "../store/slices/user";
 
 const FortunePage = () => {
   const { isLoading } = useLoginLoading();
+
+  const partner = useSelector(selectMyPartnerPokemon);
 
   const [drawLoading, setDrawLoading] = useState(false);
 
@@ -26,6 +30,14 @@ const FortunePage = () => {
     },
     [fortune]
   );
+
+  const advices = useMemo(() => {
+    if (fortune === null) return [];
+    return fortune.map((f) => ({
+      category: f.category,
+      advice: f.advice,
+    }));
+  }, [fortune]);
 
   // 오늘의 운세 조회
   useEffect(() => {
@@ -80,6 +92,33 @@ const FortunePage = () => {
             </>
           ) : (
             <FortuneBox>
+              {partner ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <SpeechBubble>
+                    <PokemonName>{partner.name}</PokemonName>
+                    {advices.map((a) => (
+                      <PokemonAdvice key={a.category}>{a.advice}</PokemonAdvice>
+                    ))}
+                  </SpeechBubble>
+                  <Pokemon
+                    $isShaking={true}
+                    src={partner.url}
+                    alt={partner.name}
+                    style={{ width: "180px", height: "180px" }}
+                  />
+                </div>
+              ) : (
+                <Text style={{ margin: "60px auto 40px" }}>
+                  파트너 포켓몬을 설정하시면 추가 조언도 받을 수 있어요!
+                </Text>
+              )}
               {Constants.routineCategory.map((rc) => (
                 <FortuneCardItem
                   key={rc.title}
@@ -165,4 +204,56 @@ const FortuneBox = styled.div`
 
 const Text = styled.p`
   margin: 5px 0;
+`;
+
+const SpeechBubble = styled.div`
+  position: relative;
+  background: #fffbe6;
+  border-radius: 20px;
+  padding: 18px 28px;
+  color: #333;
+  font-size: 1.1rem;
+  margin: 18px 0 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -18px;
+    left: 40px;
+    width: 0;
+    height: 0;
+    border: 18px solid transparent;
+    border-top-color: #fffbe6;
+    border-bottom: 0;
+    margin-left: -18px;
+  }
+`;
+
+const PokemonName = styled.div`
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+`;
+const PokemonAdvice = styled.div`
+  font-size: 1rem;
+  margin-top: 15px;
+`;
+
+const Pokemon = styled.img`
+  width: 100px;
+  height: 100px;
+
+  ${({ $isShaking }) =>
+    $isShaking &&
+    css`
+      animation: ${shake} 0.5s linear infinite;
+    `}
+`;
+
+const shake = keyframes`
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-3px); }
+  40%, 80% { transform: translateX(3px); }
 `;
