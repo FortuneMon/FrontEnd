@@ -33,7 +33,7 @@ const MyPage = () => {
               <UserName>{user.nickName}</UserName>
               <PokeName>
                 <img src="img/Partner.png" alt="partner" />
-                &nbsp;{user.partnerPokemon || "파트너 포켓몬"}
+                &nbsp;{user.pokemonName || "파트너 포켓몬"}
               </PokeName>
             </NameBox>
             {user.url && user.pokemonId ? (
