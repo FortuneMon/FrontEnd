@@ -27,23 +27,21 @@ const FortunePage = () => {
     (category) => {
       if (fortune === null) return "";
       const target = fortune.find((f) => f.category === category);
-      return target?.content
-        ? target.content
-        : // : `${category} 관련 루틴을 추가하시면, 내용을 확인하실 수 있어요.`;
-          "";
+      return target?.content ? target.content : "";
     },
     [fortune]
   );
 
   const advices = useMemo(() => {
     if (fortune === null) return [];
-    return fortune.map((f) => ({
-      category: f.category,
-      advice: f.advice,
-    }));
+    return fortune
+      .filter((f) => f.advice !== null)
+      .map((f) => ({
+        category: f.category,
+        advice: f.advice,
+      }));
   }, [fortune]);
 
-  // 오늘의 운세 조회
   useEffect(() => {
     if (!isLoading) {
       const fetchFortune = async () => {
@@ -107,9 +105,11 @@ const FortunePage = () => {
                 >
                   <SpeechBubble>
                     <PokemonName>{partner.name}</PokemonName>
-                    {advices.map((a) => (
-                      <PokemonAdvice key={a.category}>{a.advice}</PokemonAdvice>
-                    ))}
+                    {advices.length > 0 ? (
+                      advices.map((a) => <PokemonAdvice key={a.category}>{a.advice}</PokemonAdvice>)
+                    ) : (
+                      <PokemonAdvice>루틴을 추가하시면 루틴에 대해 조언을 해줄게요!</PokemonAdvice>
+                    )}
                   </SpeechBubble>
                   <Pokemon
                     $isShaking={true}
