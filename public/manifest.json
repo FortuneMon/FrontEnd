@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "포츈몬",
+  "name": "포츈몬, 포켓몬과 함께하는 루틴",
   "icons": [
     {
       "src": "favicon.ico",
