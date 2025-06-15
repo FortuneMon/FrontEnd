@@ -72,6 +72,11 @@ refactor : #42 포켓몬 뽑기 결과 페이지 UI 개선
 - Closes #35
 </code></pre>
 <br>
+<h2>5. Pull Request (PR) MERGE 유의사항</h2>
+<p>FortuneMon의 PR은 <strong>승인</strong>을 기반으로 MERGE가 가능합니다.</p>
+<p><strong>총 4명의 팀원 중 4명이 모두 승인해야</strong> MERGE가 활성화됩니다.</p>
+<p>이를 통해 코드의 품질과 안정성을 확보하고, 모든 팀원이 변경사항을 인지할 수 있도록 합니다.</p>
+<br>
 <blockquote>
 <p>작성자: <code inline="">FortuneMon</code>협업의 기술<br>
 업데이트: 2025-06-11</p>
