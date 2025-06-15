@@ -38,7 +38,7 @@ FortuneMon은 누구나 쉽게 감정 기반 루틴 서비스를 개발하거나
 - 🛠️ [설치 및 실행 방법](../docs/INSTALL.md)
 - 💡 [사용법 가이드](../docs/USAGE.md)
 - 📜 [API 명세서](https://clumsy-butter-019.notion.site/API-1f326beafea180b4a6bcf87efe606513?source=copy_link)
-- 🤝 [기여 가이드]([../docs/CONTRIBUTING.md](https://github.com/FortuneMon/.github/blob/main/docs/CONTRIBUTING.md))
+- 🤝 [기여 가이드](https://github.com/FortuneMon/.github/blob/main/docs/CONTRIBUTING.md)
 
 <br />
 
